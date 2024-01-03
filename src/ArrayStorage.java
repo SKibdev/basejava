@@ -18,7 +18,7 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (String.valueOf(storage[i]).equals(uuid)) {
+            if (storage[i].toString().equals(uuid)) {
                 return storage[i];
             }
         }
@@ -27,7 +27,7 @@ public class ArrayStorage {
 
     void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (String.valueOf(storage[i]).equals(uuid)) {
+            if (storage[i].toString().equals(uuid)) {
                 if (size > 1 && i < size - 1) {
                     System.arraycopy(storage, (i + 1), storage, i, size - i - 1);
                 }
