@@ -1,4 +1,7 @@
-import java.sql.SQLOutput;
+package com.urise.webapp.storage;
+
+import com.urise.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -10,25 +13,25 @@ public class ArrayStorage {
     int size;
     int indexResumePresent;
 
-    void update(Resume r) {
-        if (hasResume(r.uuid)) {
+    public void update(Resume r) {
+        if (hasResume(r.getUuid())) {
             storage[indexResumePresent] = r;
         }
     }
 
-    void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    void save(Resume r) {
+    public void save(Resume r) {
         if (size == CAPACITY) {
             System.out.println("Error: Storage is full!");
             return;
         } else {
             for (int i = 0; i < size; i++) {
-                if (storage[i].uuid.equals(r.uuid)) {
-                    System.out.println("Error: Resume \"uuid\" (" + r + ") already exists!");
+                if (storage[i].getUuid().equals(r.getUuid())) {
+                    System.out.println("Error: \"uuid\" (" + r + ") already exists!");
                     return;
                 }
             }
@@ -36,14 +39,14 @@ public class ArrayStorage {
         storage[size++] = r;
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         if (hasResume(uuid)) {
             return storage[indexResumePresent];
         }
         return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         if (hasResume(uuid)) {
             if (size > 1 && indexResumePresent < size - 1) {
                 System.arraycopy(storage, (indexResumePresent + 1), storage, indexResumePresent,
@@ -57,17 +60,17 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
     private boolean hasResume(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 indexResumePresent = i;
                 return true;
             }
