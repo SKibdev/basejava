@@ -10,7 +10,6 @@ public class ArrayStorage {
     int size;
     int indexResumePresent;
 
-
     void update(Resume r) {
         if (hasResume(r.uuid)) {
             storage[indexResumePresent] = r;
