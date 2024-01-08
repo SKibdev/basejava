@@ -38,12 +38,11 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index != -1) {
-            return storage[index];
-        } else {
+        if (index == -1) {
             System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
+            return null;
         }
-        return null;
+        return storage[index];
     }
 
     public void delete(String uuid) {
