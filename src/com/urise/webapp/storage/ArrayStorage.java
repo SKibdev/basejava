@@ -13,9 +13,11 @@ public class ArrayStorage {
     private int size;
 
     public void update(Resume r) {
-        int indexResumePresent = getIndex(r.getUuid(), true);
-        if (indexResumePresent != -1) {
-            storage[indexResumePresent] = r;
+        int index = getIndex(r.getUuid());
+        if (index != -1) {
+            storage[index] = r;
+        } else {
+            System.out.println("Error: The entered \"uuid\" (" + r.getUuid() + ") does not exist !!!");
         }
     }
 
@@ -27,7 +29,7 @@ public class ArrayStorage {
     public void save(Resume r) {
         if (size == CAPACITY) {
             System.out.println("Error: Storage is full!");
-        } else if (getIndex(r.getUuid(), false) != -1) {
+        } else if (getIndex(r.getUuid()) != -1) {
             System.out.println("Error: \"uuid\" (" + r + ") already exists!");
         } else {
             storage[size++] = r;
@@ -35,19 +37,23 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int indexResumePresent = getIndex(uuid, true);
-        if (indexResumePresent != -1) {
-            return storage[indexResumePresent];
+        int index = getIndex(uuid);
+        if (index != -1) {
+            return storage[index];
+        } else {
+            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
         }
         return null;
     }
 
     public void delete(String uuid) {
-        int indexResumePresent = getIndex(uuid, true);
-        if (indexResumePresent != -1) {
+        int index = getIndex(uuid);
+        if (index != -1) {
             size--;
-            storage[indexResumePresent] = storage[size];
+            storage[index] = storage[size];
             storage[size] = null;
+        } else {
+            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
         }
     }
 
@@ -62,14 +68,11 @@ public class ArrayStorage {
         return size;
     }
 
-    private int getIndex(String uuid, boolean isMessage) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
-        }
-        if (isMessage) {
-            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
         }
         return -1;
     }
