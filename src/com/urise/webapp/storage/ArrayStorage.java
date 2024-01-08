@@ -14,10 +14,10 @@ public class ArrayStorage {
 
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
-        if (index != -1) {
-            storage[index] = r;
-        } else {
+        if (index == -1) {
             System.out.println("Error: The entered \"uuid\" (" + r.getUuid() + ") does not exist !!!");
+        } else {
+            storage[index] = r;
         }
     }
 
@@ -47,12 +47,12 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index != -1) {
+        if (index == -1) {
+            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
+        } else {
             size--;
             storage[index] = storage[size];
             storage[size] = null;
-        } else {
-            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
         }
     }
 
