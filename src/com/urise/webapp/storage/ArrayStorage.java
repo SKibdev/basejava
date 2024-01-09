@@ -8,8 +8,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    public static final int CAPACITY = 10000;
-    protected final Resume[] storage = new Resume[CAPACITY];
+    private static final int STORAGE_LIMIT = 10000;
+    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
 
     public void update(Resume r) {
@@ -27,7 +27,7 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (size == CAPACITY) {
+        if (size == STORAGE_LIMIT) {
             System.out.println("Error: Storage is full!");
         } else if (getIndex(r.getUuid()) != -1) {
             System.out.println("Error: \"uuid\" (" + r + ") already exists!");
