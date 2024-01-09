@@ -7,10 +7,15 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
+public class ArrayStorage implements Storage {
     private static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
+
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
+    }
 
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
@@ -19,11 +24,6 @@ public class ArrayStorage {
         } else {
             storage[index] = r;
         }
-    }
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
     }
 
     public void save(Resume r) {
