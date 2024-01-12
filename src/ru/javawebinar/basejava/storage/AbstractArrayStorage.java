@@ -36,35 +36,36 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            System.out.println("Error: The entered \"uuid\" (" + r.getUuid() + ") does not exist !!!");
-        } else {
+        int index = check(r.getUuid());
+        if (index >= 0) {
             storage[index] = r;
         }
     }
 
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
-        } else {
+        int index = check(uuid);
+        if (index >= 0) {
             deleteResume(index);
         }
     }
 
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
-            return null;
-        }
-        return storage[index];
+        int index = check(uuid);
+        return (index >= 0) ? storage[index] : null;
     }
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
+    }
+
+    protected int check(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
+            return -1;
+        }
+        return index;
     }
 
     protected abstract int getIndex(String uuid);
