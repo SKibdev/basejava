@@ -4,36 +4,20 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public class SortedArrayStorage extends AbstractArrayStorage{
+public class SortedArrayStorage extends AbstractArrayStorage {
 
-    @Override
-    public void clear() {
-
+    protected void saveResume(Resume r, int index) {
+        System.arraycopy(storage, index, storage, index + 1, size);
+        storage[index] = r;
+        size++;
     }
 
-    @Override
-    public void update(Resume r) {
-
-    }
-
-    @Override
-    public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (size == STORAGE_LIMIT) {
-            System.out.println("Error: Storage overflow!");
-        } else if (index == 0) {
-            System.out.println("Error: \"uuid\" (" + r + ") already exists!");
-        } else {
-            index = -(index + 1);
-            System.arraycopy(storage, index, storage, index + 1, size);
-            storage[index] = r;
-            size++;
+    protected void deleteResume(int index) {
+        if (size > 1 || index < size - 1) {
+            System.arraycopy(storage, index + 1, storage, index, size - index - 1);
         }
-    }
-
-    @Override
-    public void delete(String uuid) {
-
+        size--;
+        storage[size] = null;
     }
 
     @Override
