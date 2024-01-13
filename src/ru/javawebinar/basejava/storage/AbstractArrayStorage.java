@@ -15,7 +15,7 @@ public abstract class AbstractArrayStorage implements Storage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    public Resume[] getAll() {
+    public final Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
@@ -23,7 +23,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
-    public void save(Resume r) {
+    public final void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (size == STORAGE_LIMIT) {
             System.out.println("Error: Storage overflow!");
@@ -35,31 +35,31 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void update(Resume r) {
-        int index = check(r.getUuid());
+    public final void update(Resume r) {
+        int index = getExistingIndex(r.getUuid());
         if (index >= 0) {
             storage[index] = r;
         }
     }
 
-    public void delete(String uuid) {
-        int index = check(uuid);
+    public final void delete(String uuid) {
+        int index = getExistingIndex(uuid);
         if (index >= 0) {
             deleteResume(index);
         }
     }
 
-    public Resume get(String uuid) {
-        int index = check(uuid);
+    public final Resume get(String uuid) {
+        int index = getExistingIndex(uuid);
         return (index >= 0) ? storage[index] : null;
     }
 
-    public void clear() {
+    public final void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    protected int check(String uuid) {
+    protected final int getExistingIndex(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
             System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
