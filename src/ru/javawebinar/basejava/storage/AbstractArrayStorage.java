@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -26,9 +29,10 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (size == STORAGE_LIMIT) {
-            System.out.println("Error: Storage overflow!");
+            throw new StorageException("Error: Storage overflow!", r.getUuid());
         } else if (index >= 0) {
-            System.out.println("Error: \"uuid\" (" + r + ") already exists!");
+            throw new ExistStorageException(r.getUuid());
+//            System.out.println("Error: \"uuid\" (" + r + ") already exists!");
         } else {
             insertElement(r, index);
             size++;
@@ -64,8 +68,9 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final int getExistingIndex(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
-            return -1;
+            throw new NotExistStorageException(uuid);
+//            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
+//            return -1;
         }
         return index;
     }
