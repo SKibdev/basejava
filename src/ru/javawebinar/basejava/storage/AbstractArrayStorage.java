@@ -32,7 +32,6 @@ public abstract class AbstractArrayStorage implements Storage {
             throw new StorageException("Error: Storage overflow!", r.getUuid());
         } else if (index >= 0) {
             throw new ExistStorageException(r.getUuid());
-//            System.out.println("Error: \"uuid\" (" + r + ") already exists!");
         } else {
             insertElement(r, index);
             size++;
@@ -41,9 +40,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public final void update(Resume r) {
         int index = getExistingIndex(r.getUuid());
-        if (index >= 0) {
-            storage[index] = r;
-        }
+        storage[index] = r;
     }
 
     public final void delete(String uuid) {
@@ -57,7 +54,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public final Resume get(String uuid) {
         int index = getExistingIndex(uuid);
-        return (index >= 0) ? storage[index] : null;
+        return storage[index];
     }
 
     public final void clear() {
@@ -69,8 +66,6 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
-//            System.out.println("Error: The entered \"uuid\" (" + uuid + ") does not exist !!!");
-//            return -1;
         }
         return index;
     }
