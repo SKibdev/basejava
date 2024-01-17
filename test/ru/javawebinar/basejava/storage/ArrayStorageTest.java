@@ -1,9 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ArrayStorageTest extends AbstractArrayStorageTest{
-    public ArrayStorageTest(Storage storage) {
+    public ArrayStorageTest() {
         super(new ArrayStorage());
     }
 }
