@@ -16,6 +16,7 @@ class AbstractArrayStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
+    private static final int sizeStorageTest = 3;
     private final Resume resumeUuid2 = new Resume(UUID_2);
 
     public AbstractArrayStorageTest(Storage storage) {
@@ -32,7 +33,7 @@ class AbstractArrayStorageTest {
 
     @Test
     void getAll() {
-        Resume[] expectedResume = new Resume[3];
+        Resume[] expectedResume = new Resume[sizeStorageTest];
         expectedResume[0] = new Resume(UUID_1);
         expectedResume[1] = new Resume(UUID_2);
         expectedResume[2] = new Resume(UUID_3);
@@ -42,7 +43,7 @@ class AbstractArrayStorageTest {
 
     @Test
     void size() {
-        assertEquals(3, storage.size());
+        assertEquals(sizeStorageTest, storage.size());
     }
 
     @Test
@@ -60,11 +61,14 @@ class AbstractArrayStorageTest {
 
     @Test
     void saveOverFlow() {
-        assertThrows(StorageException.class, () -> {
-            for (int i = 3; i <= STORAGE_LIMIT; i++) {
+        try {
+            for (int i = sizeStorageTest; i < STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
             }
-        });
+        } catch (Exception e) {
+            fail("Переполнение произошло раньше времени!");
+        }
+        assertThrows(StorageException.class, () -> storage.save(new Resume()));
     }
 
     @Test
@@ -80,25 +84,24 @@ class AbstractArrayStorageTest {
 
     @Test
     void delete() {
-        int size = storage.size();
+        checkDeleteArrayElement(true);
+        checkDeleteArrayElement(false);
+        checkArrayElementsNull();
+    }
 
+    private void checkDeleteArrayElement(boolean isRestorationArrayElements) {
+        int size = sizeStorageTest;
         for (int i = 1; i <= size; i++) {
             String uuid = "uuid" + i;
             storage.delete(uuid);
             assertThrows(NotExistStorageException.class, () -> storage.get(uuid));
-            storage.save(new Resume(uuid));
+            if (isRestorationArrayElements) {
+                storage.save(new Resume(uuid));
+                assertEquals(size, storage.size(), "size не соответствует размеру массива!");
+            } else {
+                assertEquals(size - i, storage.size(), "size не соответствует размеру массива!");
+            }
         }
-
-        for (int i = 1; i <= size; i++) {
-            String uuid = "uuid" + i;
-            storage.delete(uuid);
-            assertThrows(NotExistStorageException.class, () -> storage.get(uuid));
-        }
-
-        for (Resume element : storage.getAll()) {
-            assertNull(element, "Array element should be null");
-        }
-        assertEquals(0, storage.size());
     }
 
     @Test
@@ -119,6 +122,10 @@ class AbstractArrayStorageTest {
     @Test
     void clear() {
         storage.clear();
+        checkArrayElementsNull();
+    }
+
+    private void checkArrayElementsNull() {
         for (Resume element : storage.getAll()) {
             assertNull(element, "Array element should be null");
         }
