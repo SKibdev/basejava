@@ -11,12 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.javawebinar.basejava.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 class AbstractArrayStorageTest {
-    private final Storage storage;
-
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final int sizeStorageTest = 3;
+    private final Storage storage;
     private final Resume resumeUuid2 = new Resume(UUID_2);
 
     public AbstractArrayStorageTest(Storage storage) {
