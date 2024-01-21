@@ -15,8 +15,10 @@ class AbstractArrayStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final int sizeStorageTest = 3;
+    private static final Resume resumeUuid1 = new Resume(UUID_1);
+    private static final Resume resumeUuid2 = new Resume(UUID_2);
+    private static final Resume resumeUuid3 = new Resume(UUID_3);
     private final Storage storage;
-    private final Resume resumeUuid2 = new Resume(UUID_2);
 
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -25,9 +27,9 @@ class AbstractArrayStorageTest {
     @BeforeEach
     public void setUp() {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
+        storage.save(resumeUuid1);
+        storage.save(resumeUuid2);
+        storage.save(resumeUuid3);
     }
 
     @Test
@@ -42,7 +44,7 @@ class AbstractArrayStorageTest {
 
     @Test
     void size() {
-        assertEquals(sizeStorageTest, storage.size());
+        assertSize(sizeStorageTest);
     }
 
     @Test
@@ -129,5 +131,9 @@ class AbstractArrayStorageTest {
             assertNull(element, "Array element should be null");
         }
         assertEquals(0, storage.size());
+    }
+
+    private void assertSize(int size) {
+        assertEquals(size, storage.size());
     }
 }
