@@ -11,13 +11,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.javawebinar.basejava.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 class AbstractArrayStorageTest {
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
+
     private static final int sizeStorageTest = 3;
+    public static final String UUID_1 = "uuid1";
     private static final Resume resumeUuid1 = new Resume(UUID_1);
+    public static final String UUID_2 = "uuid2";
     private static final Resume resumeUuid2 = new Resume(UUID_2);
+    public static final String UUID_3 = "uuid3";
     private static final Resume resumeUuid3 = new Resume(UUID_3);
+    public static final String UUID_4 = "uuid4";
+    private static final Resume resumeUuid4 = new Resume(UUID_4);
+
     private final Storage storage;
 
     public AbstractArrayStorageTest(Storage storage) {
@@ -34,12 +38,7 @@ class AbstractArrayStorageTest {
 
     @Test
     void getAll() {
-        Resume[] expectedResume = new Resume[sizeStorageTest];
-        expectedResume[0] = new Resume(UUID_1);
-        expectedResume[1] = new Resume(UUID_2);
-        expectedResume[2] = new Resume(UUID_3);
-
-        assertArrayEquals(expectedResume, storage.getAll());
+        assertGetAll(new Resume[]{resumeUuid1, resumeUuid2, resumeUuid3});
     }
 
     @Test
@@ -49,10 +48,9 @@ class AbstractArrayStorageTest {
 
     @Test
     void save() {
-        Resume resumeUuid4 = new Resume("uuid4");
         storage.save(resumeUuid4);
-        assertEquals(4, storage.size());
-        assertEquals(resumeUuid4, storage.get("uuid4"));
+        assertSize(sizeStorageTest + 1);
+        assertGet(resumeUuid4);
     }
 
     @Test
@@ -63,7 +61,8 @@ class AbstractArrayStorageTest {
     @Test
     void saveOverFlow() {
         try {
-            for (int i = sizeStorageTest; i < STORAGE_LIMIT; i++) {
+            storage.clear();
+            for (int i = 0; i < STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
             }
         } catch (Exception e) {
@@ -85,25 +84,26 @@ class AbstractArrayStorageTest {
 
     @Test
     void delete() {
-        checkDeleteArrayElement(true);
-        checkDeleteArrayElement(false);
-        checkArrayElementsNull();
+        storage.delete(UUID_2);
+        assertSize(sizeStorageTest - 1);
+        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_2));
+        assertGetAll(new Resume[]{resumeUuid1, resumeUuid3});
     }
 
-    private void checkDeleteArrayElement(boolean isRestorationArrayElements) {
-        int size = sizeStorageTest;
-        for (int i = 1; i <= size; i++) {
-            String uuid = "uuid" + i;
-            storage.delete(uuid);
-            assertThrows(NotExistStorageException.class, () -> storage.get(uuid));
-            if (isRestorationArrayElements) {
-                storage.save(new Resume(uuid));
-                assertEquals(size, storage.size(), "size не соответствует размеру массива!");
-            } else {
-                assertEquals(size - i, storage.size(), "size не соответствует размеру массива!");
-            }
-        }
-    }
+//    private void checkDeleteArrayElement(boolean isRestorationArrayElements) {
+//        int size = sizeStorageTest;
+//        for (int i = 1; i <= size; i++) {
+//            String uuid = "uuid" + i;
+//            storage.delete(uuid);
+//            assertThrows(NotExistStorageException.class, () -> storage.get(uuid));
+//            if (isRestorationArrayElements) {
+//                storage.save(new Resume(uuid));
+//                assertEquals(size, storage.size(), "size не соответствует размеру массива!");
+//            } else {
+//                assertEquals(size - i, storage.size(), "size не соответствует размеру массива!");
+//            }
+//        }
+//    }
 
     @Test
     void deleteNotExist() {
@@ -112,7 +112,9 @@ class AbstractArrayStorageTest {
 
     @Test
     void get() {
-        assertEquals(resumeUuid2, storage.get(UUID_2));
+        assertGet(resumeUuid1);
+        assertGet(resumeUuid2);
+        assertGet(resumeUuid3);
     }
 
     @Test
@@ -123,17 +125,19 @@ class AbstractArrayStorageTest {
     @Test
     void clear() {
         storage.clear();
-        checkArrayElementsNull();
-    }
-
-    private void checkArrayElementsNull() {
-        for (Resume element : storage.getAll()) {
-            assertNull(element, "Array element should be null");
-        }
-        assertEquals(0, storage.size());
+        assertSize(0);
+        assertArrayEquals(new Resume[0], storage.getAll());
     }
 
     private void assertSize(int size) {
         assertEquals(size, storage.size());
+    }
+
+    private void assertGetAll(Resume[] expected) {
+        assertArrayEquals(expected, storage.getAll());
+    }
+
+    private void assertGet(Resume resume) {
+        assertEquals(resume, storage.get(resume.getUuid()));
     }
 }
