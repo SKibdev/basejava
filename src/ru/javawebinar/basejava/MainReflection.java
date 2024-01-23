@@ -49,6 +49,5 @@ public class MainReflection {
 
         method = resumeClass.getDeclaredMethod("toString");
         System.out.println("Вызываем метод toString у Resume r через отражение(getDeclaredMethod):" + method.invoke(r));
-
     }
 }
