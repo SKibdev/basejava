@@ -27,7 +27,7 @@ public abstract class AbstractArrayStorageTest {
 
     private final Storage storage;
 
-    public AbstractArrayStorageTest(Storage storage) {
+    protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -58,7 +58,8 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void saveExist() {
-        assertThrows(ExistStorageException.class, () -> storage.save(RESUME_UUID_2));
+        // Для проверки условия if (index >= 0) необходимо сохранять RESUME с индексом 0
+        assertThrows(ExistStorageException.class, () -> storage.save(RESUME_UUID_1));
     }
 
     @Test
@@ -133,6 +134,7 @@ public abstract class AbstractArrayStorageTest {
     }
 
     private void assertGetAll(Resume[] expected) {
+        assertSize(SIZE_TEST);
         assertArrayEquals(expected, storage.getAll());
     }
 
