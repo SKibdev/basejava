@@ -5,11 +5,12 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
+
     @Override
     protected void insertElement(Resume r, int index) {
-        // size еще не увеличен в родительском классе
+        // size уже увеличен в родительском классе
         index = -(index + 1);
-        System.arraycopy(storage, index, storage, index + 1, size - index);
+        System.arraycopy(storage, index, storage, index + 1, size - 1 - index );
         storage[index] = r;
     }
 

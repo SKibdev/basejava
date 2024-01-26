@@ -6,11 +6,12 @@ import ru.javawebinar.basejava.model.Resume;
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
+
     @Override
     protected void insertElement(Resume r, int index) {
-        // size еще не увеличен в родительском классе
-        storage[size] = r;
-    }
+        // size уже увеличен в родительском классе
+        storage[size - 1] = r;
+     }
 
     @Override
     protected void fillDeletedElement(int index) {

@@ -12,7 +12,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.javawebinar.basejava.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
     private static final int SIZE_TEST = 3;
     public static final String UUID_1 = "uuid1";
