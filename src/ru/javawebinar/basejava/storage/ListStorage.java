@@ -8,7 +8,7 @@ public class ListStorage extends AbstractStorage {
     protected final ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
-    public final Resume[] getAll() {
+    public Resume[] getAll() {
         return storage.toArray(storage.toArray(new Resume[0]));
     }
 
@@ -18,24 +18,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public final void deleteElement(int index) {
-        storage.remove(index);
-        storage.trimToSize();
-    }
-
-    @Override
-    public final Resume getElement(int index) {
-        return storage.get(index);
-    }
-
-    @Override
     public final void clear() {
         storage.clear();
-    }
-
-    @Override
-    protected void replaceElement(int index, Resume r) {
-        storage.set(index, r);
     }
 
     @Override
@@ -48,9 +32,21 @@ public class ListStorage extends AbstractStorage {
     protected void insertElement(Resume r, int index) {
         storage.add(r);
     }
-//
-//    protected abstract void insertElement(Resume r, int index);
-//
-//    protected abstract void fillDeletedElement(int index);
+
+    @Override
+    protected void replaceElement(int index, Resume r) {
+        storage.set(index, r);
+    }
+
+    @Override
+    protected final void deleteElement(int index) {
+        storage.remove(index);
+        storage.trimToSize();
+    }
+
+    @Override
+    protected final Resume getElement(int index) {
+        return storage.get(index);
+    }
 }
 

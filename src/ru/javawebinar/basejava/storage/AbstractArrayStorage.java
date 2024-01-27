@@ -16,33 +16,18 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    public final Resume[] getAll() {
+    @Override
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
+    @Override
     public int size() {
         return size;
     }
 
     @Override
-    protected void replaceElement(int index, Resume r) {
-        storage[index] = r;
-    }
-
-    @Override
-    public final void deleteElement(int index) {
-        size--;
-        fillDeletedElement(index);
-        storage[size] = null;
-    }
-
-    @Override
-    public final Resume getElement(int index) {
-        return storage[index];
-    }
-
-    @Override
-    public final void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
@@ -53,6 +38,23 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
             throw new StorageException("Error: Storage overflow!", uuid);
         }
         size++;
+    }
+
+    @Override
+    protected void replaceElement(int index, Resume r) {
+        storage[index] = r;
+    }
+
+    @Override
+    protected final void deleteElement(int index) {
+        size--;
+        fillDeletedElement(index);
+        storage[size] = null;
+    }
+
+    @Override
+    protected Resume getElement(int index) {
+        return storage[index];
     }
 
     protected abstract int getIndex(String uuid);
