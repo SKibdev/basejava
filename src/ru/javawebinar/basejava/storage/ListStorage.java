@@ -4,28 +4,34 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     protected final ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
-    public Resume[] getAll() {
+    public Resume[] doGetAll() {
         return storage.toArray(storage.toArray(new Resume[0]));
     }
 
     @Override
-    public int size() {
+    public int doGetSize() {
         return storage.size();
     }
 
     @Override
-    public final void clear() {
+    public final void doClear() {
         storage.clear();
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected Integer getIndex(String uuid) {
         Resume searchKey = new Resume(uuid);
-        return storage.indexOf(searchKey);
+        int index = -1;
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).equals(searchKey)) {
+                index = i;
+            }
+        }
+        return index;
     }
 
     @Override
@@ -41,7 +47,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected final void deleteElement(int index) {
         storage.remove(index);
-        storage.trimToSize();
     }
 
     @Override

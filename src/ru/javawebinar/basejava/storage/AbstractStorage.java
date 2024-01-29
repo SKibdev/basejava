@@ -4,52 +4,52 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage <T extends Comparable<T>> implements Storage  {
 
-    public final void save(Resume r) {
+    public final void doSave(Resume r) {
         String uuid = r.getUuid();
-        int index = getIndex(uuid);
-        if (index >= 0) {
+        T searchKey = getIndex(uuid);
+        if (searchKey.compareTo((T) Integer.valueOf(0)) >= 0) {
             throw new ExistStorageException(uuid);
         }
         increaseSize(uuid);
-        insertElement(r, index);
+        insertElement(r, (Integer) searchKey);
     }
 
     protected void increaseSize(String uuid) {
 
     }
 
-    public final void update(Resume r) {
-        int index = getExistingIndex(r.getUuid());
-        replaceElement(index, r);
+    public final void doUpdate(Resume r) {
+        T searchKey = getExistingSearchKey(r.getUuid());
+        replaceElement((Integer) searchKey, r);
     }
 
-    public final void delete(String uuid) {
-        int index = getExistingIndex(uuid);
-        deleteElement(index);
+    public final void doDelete(String uuid) {
+        T searchKey = getExistingSearchKey(uuid);
+        deleteElement((Integer) searchKey);
     }
 
-    public final Resume get(String uuid) {
-        int index = getExistingIndex(uuid);
-        return getElement(index);
+    public final Resume doGet(String uuid) {
+        T searchKey = getExistingSearchKey(uuid);
+        return getElement((Integer) searchKey);
     }
 
-    protected final int getExistingIndex(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
+    protected final T getExistingSearchKey(String uuid) {
+        T searchKey = getIndex(uuid);
+        if (searchKey.compareTo((T) Integer.valueOf(0)) < 0) {
             throw new NotExistStorageException(uuid);
         }
-        return index;
+        return searchKey;
     }
 
-    public abstract Resume[] getAll();
+    public abstract Resume[] doGetAll();
 
-    public abstract int size();
+    public abstract int doGetSize();
 
-    public abstract void clear();
+    public abstract void doClear();
 
-    protected abstract int getIndex(String uuid);
+    protected abstract T getIndex(String uuid);
 
     protected abstract void insertElement(Resume r, int index);
 
