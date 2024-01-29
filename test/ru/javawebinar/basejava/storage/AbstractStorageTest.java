@@ -30,10 +30,10 @@ public class AbstractStorageTest {
 
     @BeforeEach
     public void setUp() {
-        storage.clear();
-        storage.save(RESUME_UUID_1);
-        storage.save(RESUME_UUID_2);
-        storage.save(RESUME_UUID_3);
+        storage.doClear();
+        storage.doSave(RESUME_UUID_1);
+        storage.doSave(RESUME_UUID_2);
+        storage.doSave(RESUME_UUID_3);
     }
 
     @Test
@@ -47,33 +47,33 @@ public class AbstractStorageTest {
     }
 
     @Test
-    public void save() {
-        storage.save(RESUME_UUID_4);
+    public void doSave() {
+        storage.doSave(RESUME_UUID_4);
         assertSize(SIZE_TEST + 1);
         assertGet(RESUME_UUID_4);
     }
 
     @Test
-    public void saveExist() {
+    public void doSaveExist() {
         // Для проверки условия if (index >= 0) необходимо сохранять RESUME с индексом 0
-        assertThrows(ExistStorageException.class, () -> storage.save(RESUME_UUID_1));
+        assertThrows(ExistStorageException.class, () -> storage.doSave(RESUME_UUID_1));
     }
 
 
     @Test
-    public void update() {
-        storage.update(RESUME_UUID_2);
-        assertEquals(RESUME_UUID_2, storage.get(UUID_2));
+    public void doUpdate() {
+        storage.doUpdate(RESUME_UUID_2);
+        assertEquals(RESUME_UUID_2, storage.doGet(UUID_2));
     }
 
     @Test
-    public void updateNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.update(new Resume(UUID_NOT_EXIST)));
+    public void doUpdateNotExist() {
+        assertThrows(NotExistStorageException.class, () -> storage.doUpdate(new Resume(UUID_NOT_EXIST)));
     }
 
     @Test
     public void delete() {
-        storage.save(RESUME_UUID_4);
+        storage.doSave(RESUME_UUID_4);
         assertDelete(UUID_2, new Resume[]{RESUME_UUID_1, RESUME_UUID_3, RESUME_UUID_4});
         assertDelete(UUID_4, new Resume[]{RESUME_UUID_1, RESUME_UUID_3});
         assertDelete(UUID_1, new Resume[]{RESUME_UUID_3});
@@ -81,18 +81,18 @@ public class AbstractStorageTest {
     }
 
     private void assertDelete(String uuid, Resume[] remaining) {
-        int size = storage.size();
-        storage.delete(uuid);
+        int size = storage.doGetSize();
+        storage.doDelete(uuid);
         assertSize(size - 1);
-        assertThrows(NotExistStorageException.class, () -> storage.get(uuid));
-        Resume[] storageSorted = storage.getAll();
+        assertThrows(NotExistStorageException.class, () -> storage.doGet(uuid));
+        Resume[] storageSorted = storage.doGetAll();
         Arrays.sort(storageSorted);
         assertArrayEquals(remaining, storageSorted);
     }
 
     @Test
     public void deleteNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.delete(UUID_NOT_EXIST));
+        assertThrows(NotExistStorageException.class, () -> storage.doDelete(UUID_NOT_EXIST));
     }
 
     @Test
@@ -104,26 +104,26 @@ public class AbstractStorageTest {
 
     @Test
     public void getNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_NOT_EXIST));
+        assertThrows(NotExistStorageException.class, () -> storage.doGet(UUID_NOT_EXIST));
     }
 
     @Test
-    public void clear() {
-        storage.clear();
+    public void doClear() {
+        storage.doClear();
         assertSize(0);
-        assertArrayEquals(new Resume[0], storage.getAll());
+        assertArrayEquals(new Resume[0], storage.doGetAll());
     }
 
     private void assertSize(int size) {
-        assertEquals(size, storage.size());
+        assertEquals(size, storage.doGetSize());
     }
 
     private void assertGetAll(Resume[] expected) {
         assertSize(SIZE_TEST);
-        assertArrayEquals(expected, storage.getAll());
+        assertArrayEquals(expected, storage.doGetAll());
     }
 
     private void assertGet(Resume resume) {
-        assertEquals(resume, storage.get(resume.getUuid()));
+        assertEquals(resume, storage.doGet(resume.getUuid()));
     }
 }
