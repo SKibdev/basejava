@@ -37,12 +37,12 @@ public class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
+    public void doGetAll() {
         assertGetAll(new Resume[]{RESUME_UUID_1, RESUME_UUID_2, RESUME_UUID_3});
     }
 
     @Test
-    public void size() {
+    public void doSize() {
         assertSize(SIZE_TEST);
     }
 
