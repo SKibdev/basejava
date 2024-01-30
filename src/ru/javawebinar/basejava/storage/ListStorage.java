@@ -9,7 +9,7 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     public Resume[] doGetAll() {
-        return storage.toArray(storage.toArray(new Resume[0]));
+        return storage.toArray(new Resume[0]);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected Integer getIndex(String uuid) {
+    protected Integer getKey(String uuid) {
         Resume searchKey = new Resume(uuid);
         int index = -1;
         for (int i = 0; i < storage.size(); i++) {

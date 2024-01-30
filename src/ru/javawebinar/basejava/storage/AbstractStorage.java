@@ -8,7 +8,7 @@ public abstract class AbstractStorage <T extends Comparable<T>> implements Stora
 
     public final void doSave(Resume r) {
         String uuid = r.getUuid();
-        T searchKey = getIndex(uuid);
+        T searchKey = getKey(uuid);
         if (searchKey.compareTo((T) Integer.valueOf(0)) >= 0) {
             throw new ExistStorageException(uuid);
         }
@@ -36,7 +36,7 @@ public abstract class AbstractStorage <T extends Comparable<T>> implements Stora
     }
 
     protected final T getExistingSearchKey(String uuid) {
-        T searchKey = getIndex(uuid);
+        T searchKey = getKey(uuid);
         if (searchKey.compareTo((T) Integer.valueOf(0)) < 0) {
             throw new NotExistStorageException(uuid);
         }
@@ -49,7 +49,7 @@ public abstract class AbstractStorage <T extends Comparable<T>> implements Stora
 
     public abstract void doClear();
 
-    protected abstract T getIndex(String uuid);
+    protected abstract T getKey(String uuid);
 
     protected abstract void insertElement(Resume r, int index);
 
