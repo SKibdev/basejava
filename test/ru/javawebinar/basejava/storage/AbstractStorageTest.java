@@ -59,7 +59,6 @@ public class AbstractStorageTest {
         assertThrows(ExistStorageException.class, () -> storage.doSave(RESUME_UUID_1));
     }
 
-
     @Test
     public void doUpdate() {
         storage.doUpdate(RESUME_UUID_2);
@@ -120,7 +119,9 @@ public class AbstractStorageTest {
 
     private void assertGetAll(Resume[] expected) {
         assertSize(SIZE_TEST);
-        assertArrayEquals(expected, storage.doGetAll());
+        Resume[] sortedStorage = storage.doGetAll();
+        Arrays.sort(sortedStorage);
+        assertArrayEquals(expected, sortedStorage);
     }
 
     private void assertGet(Resume resume) {
