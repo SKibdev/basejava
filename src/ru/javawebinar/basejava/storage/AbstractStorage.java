@@ -4,7 +4,7 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-public abstract class AbstractStorage <T> implements Storage  {
+public abstract class AbstractStorage<T> implements Storage {
 
     public final void doSave(Resume r) {
         String uuid = r.getUuid();
@@ -12,7 +12,7 @@ public abstract class AbstractStorage <T> implements Storage  {
         if (isExist(searchKey)) {
             throw new ExistStorageException(uuid);
         }
-        insertElement(r, searchKey);
+        insertElement(searchKey, r);
     }
 
     public final void doUpdate(Resume r) {
@@ -34,9 +34,8 @@ public abstract class AbstractStorage <T> implements Storage  {
         T searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             return searchKey;
-        } else {
-            throw new NotExistStorageException(uuid);
         }
+        throw new NotExistStorageException(uuid);
     }
 
     public abstract Resume[] doGetAll();
@@ -49,7 +48,7 @@ public abstract class AbstractStorage <T> implements Storage  {
 
     protected abstract boolean isExist(T searchKey);
 
-    protected abstract void insertElement(Resume r, T searchKey);
+    protected abstract void insertElement(T searchKey, Resume r);
 
     protected abstract void replaceElement(T searchKey, Resume r);
 

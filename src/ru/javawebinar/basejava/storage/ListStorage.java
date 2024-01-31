@@ -40,7 +40,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void insertElement(Resume r, Integer searchKey) {
+    protected void insertElement(Integer searchKey, Resume r) {
         storage.add(r);
     }
 
