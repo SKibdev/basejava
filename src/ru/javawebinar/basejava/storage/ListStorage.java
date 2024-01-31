@@ -24,14 +24,14 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        int index = -1;
+        Resume searchResume = new Resume(uuid);
+        int searchKey = -1;
         for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).equals(searchKey)) {
-                index = i;
+            if (storage.get(i).equals(searchResume)) {
+                searchKey = i;
             }
         }
-        return index;
+        return searchKey;
     }
 
     @Override

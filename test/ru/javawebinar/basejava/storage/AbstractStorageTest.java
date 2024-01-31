@@ -72,7 +72,7 @@ public class AbstractStorageTest {
     }
 
     @Test
-    public void delete() {
+    public void doDelete() {
         storage.doSave(RESUME_UUID_4);
         assertDelete(UUID_2, new Resume[]{RESUME_UUID_1, RESUME_UUID_3, RESUME_UUID_4});
         assertDelete(UUID_4, new Resume[]{RESUME_UUID_1, RESUME_UUID_3});
@@ -91,19 +91,19 @@ public class AbstractStorageTest {
     }
 
     @Test
-    public void deleteNotExist() {
+    public void doDeleteNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.doDelete(UUID_NOT_EXIST));
     }
 
     @Test
-    public void get() {
+    public void doGet() {
         assertGet(RESUME_UUID_1);
         assertGet(RESUME_UUID_2);
         assertGet(RESUME_UUID_3);
     }
 
     @Test
-    public void getNotExist() {
+    public void doGetNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.doGet(UUID_NOT_EXIST));
     }
 
