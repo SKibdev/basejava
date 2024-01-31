@@ -23,7 +23,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected Integer getKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
         int index = -1;
         for (int i = 0; i < storage.size(); i++) {
@@ -35,23 +35,28 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void insertElement(Resume r, int index) {
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
+    }
+
+    @Override
+    protected void insertElement(Resume r, Integer searchKey) {
         storage.add(r);
     }
 
     @Override
-    protected void replaceElement(int index, Resume r) {
-        storage.set(index, r);
+    protected void replaceElement(Integer searchKey, Resume r) {
+        storage.set(searchKey, r);
     }
 
     @Override
-    protected final void deleteElement(int index) {
-        storage.remove(index);
+    protected final void deleteElement(Integer searchKey) {
+        storage.remove((int) searchKey);
     }
 
     @Override
-    protected final Resume getElement(int index) {
-        return storage.get(index);
+    protected final Resume getElement(Integer searchKey) {
+        return storage.get(searchKey);
     }
 }
 
