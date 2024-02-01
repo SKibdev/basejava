@@ -7,11 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 public abstract class AbstractStorage<T> implements Storage {
 
     public final void doSave(Resume r) {
-        String uuid = r.getUuid();
-        T searchKey = getSearchKey(uuid);
-        if (isExist(searchKey)) {
-            throw new ExistStorageException(uuid);
-        }
+        T searchKey = getNotExistingSearchKey(r.getUuid());
         insertElement(searchKey, r);
     }
 
@@ -28,6 +24,14 @@ public abstract class AbstractStorage<T> implements Storage {
     public final Resume doGet(String uuid) {
         T searchKey = getExistingSearchKey(uuid);
         return getElement(searchKey);
+    }
+
+    protected final T getNotExistingSearchKey(String uuid) {
+        T searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
     }
 
     protected final T getExistingSearchKey(String uuid) {
