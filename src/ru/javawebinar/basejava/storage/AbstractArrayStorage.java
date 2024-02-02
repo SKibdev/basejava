@@ -13,32 +13,48 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     @Override
-    public Resume[] doGetAll() {
-        return Arrays.copyOf(storage, size);
-    }
-
-    @Override
-    public int doGetSize() {
-        return size;
-    }
-
-    @Override
-    public void doClear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
+    /**
+     * @return array, contains only Resumes in storage (without null)
+     */
     @Override
-    protected void insertElement(Integer searchKey, Resume r) {
+    public Resume[] getAll() {
+        return Arrays.copyOf(storage, size);
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    protected void doUpdate(Integer searchKey, Resume r) {
+        storage[searchKey] = r;
+    }
+
+    @Override
+    protected void doSave(Integer searchKey, Resume r) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Error: Storage overflow!", r.getUuid());
         }
+        insertElement(r, searchKey);
         size++;
-        insert(r, searchKey);
+    }
+
+    @Override
+    protected Resume doGet(Integer searchKey) {
+        return storage[searchKey];
+    }
+
+    @Override
+    protected void doDelete(Integer searchKey) {
+        fillDeletedElement(searchKey);
+        storage[--size] = null;
     }
 
     @Override
@@ -47,25 +63,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void replaceElement(Integer searchKey, Resume r) {
-        storage[searchKey] = r;
-    }
-
-    @Override
-    protected final void deleteElement(Integer searchKey) {
-        size--;
-        fillDeletedElement(searchKey);
-        storage[size] = null;
-    }
-
-    @Override
-    protected Resume getElement(Integer searchKey) {
-        return storage[searchKey];
-    }
-
     protected abstract Integer getSearchKey(String uuid);
 
-    protected abstract void insert(Resume r, Integer searchKey);
+    protected abstract void insertElement(Resume r, Integer searchKey);
 
     protected abstract void fillDeletedElement(Integer searchKey);
 }

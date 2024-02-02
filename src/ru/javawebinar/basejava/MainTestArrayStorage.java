@@ -15,31 +15,31 @@ public class MainTestArrayStorage {
         final Resume r2 = new Resume("uuid1");
         final Resume r3 = new Resume("uuid11");
 
-        ARRAY_STORAGE.doSave(r1);
-        ARRAY_STORAGE.doSave(r2);
-        ARRAY_STORAGE.doSave(r3);
+        ARRAY_STORAGE.save(r1);
+        ARRAY_STORAGE.save(r2);
+        ARRAY_STORAGE.save(r3);
 
-        System.out.println("Get r1: " + ARRAY_STORAGE.doGet(r1.getUuid()));
-        System.out.println("Size: " + ARRAY_STORAGE.doGetSize());
+        System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));
+        System.out.println("Size: " + ARRAY_STORAGE.size());
 
-        System.out.println("doGet dummy: " + ARRAY_STORAGE.doGet("dummy"));
+        System.out.println("doGet dummy: " + ARRAY_STORAGE.get("dummy"));
 
-        ARRAY_STORAGE.doUpdate(r3);
+        ARRAY_STORAGE.update(r3);
 
-        System.out.println("doGet updated r3: " + ARRAY_STORAGE.doGet(r3.getUuid()));
+        System.out.println("doGet updated r3: " + ARRAY_STORAGE.get(r3.getUuid()));
 
         printAll();
-        ARRAY_STORAGE.doDelete(r1.getUuid());
+        ARRAY_STORAGE.delete(r1.getUuid());
         printAll();
-        ARRAY_STORAGE.doClear();
+        ARRAY_STORAGE.clear();
         printAll();
 
-        System.out.println("doGetSize: " + ARRAY_STORAGE.doGetSize());
+        System.out.println("doGetSize: " + ARRAY_STORAGE.size());
     }
 
     static void printAll() {
         System.out.println("\ndoGet All");
-        for (Resume r : ARRAY_STORAGE.doGetAll()) {
+        for (Resume r : ARRAY_STORAGE.getAll()) {
             System.out.println(r);
         }
     }

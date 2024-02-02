@@ -7,20 +7,20 @@ import ru.javawebinar.basejava.model.Resume;
  */
 public interface Storage {
 
-    void doClear();
+    void clear();
 
-    void doUpdate(Resume r);
+    void update(Resume r);
 
-    void doSave(Resume r);
+    void save(Resume r);
 
-    Resume doGet(String uuid);
+    Resume get(String uuid);
 
-    void doDelete(String uuid);
+    void delete(String uuid);
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] doGetAll();
+    Resume[] getAll();
 
-    int doGetSize();
+    int size();
 }

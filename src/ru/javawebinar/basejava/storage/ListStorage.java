@@ -8,30 +8,18 @@ public class ListStorage extends AbstractStorage<Integer> {
     protected final ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
-    public Resume[] doGetAll() {
-        return storage.toArray(new Resume[0]);
-    }
-
-    @Override
-    public int doGetSize() {
-        return storage.size();
-    }
-
-    @Override
-    public final void doClear() {
+    public final void clear() {
         storage.clear();
     }
 
     @Override
-    protected Integer getSearchKey(String uuid) {
-        Resume searchResume = new Resume(uuid);
-        int searchKey = -1;
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).equals(searchResume)) {
-                searchKey = i;
-            }
-        }
-        return searchKey;
+    public Resume[] getAll() {
+        return storage.toArray(new Resume[0]);
+    }
+
+    @Override
+    public int size() {
+        return storage.size();
     }
 
     @Override
@@ -40,23 +28,33 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void insertElement(Integer searchKey, Resume r) {
+    protected void doSave(Integer searchKey, Resume r) {
         storage.add(r);
     }
 
     @Override
-    protected void replaceElement(Integer searchKey, Resume r) {
+    protected void doUpdate(Integer searchKey, Resume r) {
         storage.set(searchKey, r);
     }
 
     @Override
-    protected final void deleteElement(Integer searchKey) {
+    protected final Resume doGet(Integer searchKey) {
+        return storage.get(searchKey);
+    }
+
+    @Override
+    protected final void doDelete(Integer searchKey) {
         storage.remove((int) searchKey);
     }
 
     @Override
-    protected final Resume getElement(Integer searchKey) {
-        return storage.get(searchKey);
+    protected Integer getSearchKey(String uuid) {
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 

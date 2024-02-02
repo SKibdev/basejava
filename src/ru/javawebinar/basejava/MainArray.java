@@ -31,19 +31,19 @@ public class MainArray {
             }
             switch (params[0]) {
                 case "list" -> printAll();
-                case "size" -> System.out.println(ARRAY_STORAGE.doGetSize());
+                case "size" -> System.out.println(ARRAY_STORAGE.size());
                 case "save" -> {
                     r = new Resume(uuid);
-                    ARRAY_STORAGE.doSave(r);
+                    ARRAY_STORAGE.save(r);
                     printAll();
                 }
                 case "delete" -> {
-                    ARRAY_STORAGE.doDelete(uuid);
+                    ARRAY_STORAGE.delete(uuid);
                     printAll();
                 }
-                case "get" -> System.out.println(ARRAY_STORAGE.doGet(uuid));
+                case "get" -> System.out.println(ARRAY_STORAGE.get(uuid));
                 case "clear" -> {
-                    ARRAY_STORAGE.doClear();
+                    ARRAY_STORAGE.clear();
                     printAll();
                 }
                 case "exit" -> {
@@ -55,7 +55,7 @@ public class MainArray {
     }
 
     static void printAll() {
-        Resume[] all = ARRAY_STORAGE.doGetAll();
+        Resume[] all = ARRAY_STORAGE.getAll();
         System.out.println("----------------------------");
         if (all.length == 0) {
             System.out.println("Empty");

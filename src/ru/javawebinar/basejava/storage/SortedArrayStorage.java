@@ -12,18 +12,16 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insert(Resume r, Integer searchKey) {
-        // size уже увеличен в родительском классе
+    protected void insertElement(Resume r, Integer searchKey) {
         searchKey = -(searchKey + 1);
-        System.arraycopy(storage, searchKey, storage, searchKey + 1, size - 1 - searchKey);
+        System.arraycopy(storage, searchKey, storage, searchKey + 1, size - searchKey);
         storage[searchKey] = r;
     }
 
     @Override
     protected void fillDeletedElement(Integer searchKey) {
-        // size уже уменьшин в родительском классе
-        if (size != searchKey) {
-            System.arraycopy(storage, searchKey + 1, storage, searchKey, size - searchKey);
+        if (size - 1 != searchKey) {
+            System.arraycopy(storage, searchKey + 1, storage, searchKey, size - 1 - searchKey);
         }
     }
 }

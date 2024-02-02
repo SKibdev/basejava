@@ -17,14 +17,12 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insert(Resume r, Integer searchKey) {
-        // size уже увеличен в родительском классе
-        storage[size - 1] = r;
+    protected void insertElement(Resume r, Integer searchKey) {
+        storage[size] = r;
     }
 
     @Override
     protected void fillDeletedElement(Integer searchKey) {
-        // size уже уменьшин в родительском классе
-        storage[searchKey] = storage[size];
+        storage[searchKey] = storage[size - 1];
     }
 }
