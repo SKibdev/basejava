@@ -13,6 +13,7 @@ public class MainCollections {
     private static final Resume RESUME_UUID_3 = new Resume(UUID_3);
     public static final String UUID_4 = "uuid4";
     private static final Resume RESUME_UUID_4 = new Resume(UUID_4);
+
     public static void main(String[] args) {
         Collection<Resume> collection = new ArrayList<>();
         collection.add(RESUME_UUID_1);
@@ -41,6 +42,7 @@ public class MainCollections {
         map.put(UUID_2, RESUME_UUID_2);
         map.put(UUID_3, RESUME_UUID_3);
 
+        // плохой вариант, т.к. map.get(uuid) - затратная опреация
         for (String uuid : map.keySet()) {
             System.out.println(map.get(uuid));
         }
@@ -48,6 +50,10 @@ public class MainCollections {
         for (Map.Entry<String, Resume> entry : map.entrySet()) {
             System.out.println(entry.getValue());
         }
+        List<Resume> resumes = Arrays.asList(RESUME_UUID_1, RESUME_UUID_2, RESUME_UUID_3);
+        // не работает, так как Arrays.asList возвращает ссылку на новый
+        //  ArrayList внутри вложенного статитический класса public static <T> List<T> asList
+        // resumes.remove(1);
+        System.out.println(resumes);
     }
-
 }
