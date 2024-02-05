@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,9 +85,9 @@ public class AbstractStorageTest {
         storage.delete(uuid);
         assertSize(size - 1);
         assertThrows(NotExistStorageException.class, () -> storage.get(uuid));
-        Resume[] storageSorted = storage.getAll();
-        Arrays.sort(storageSorted);
-        assertArrayEquals(remaining, storageSorted);
+        Resume[] sortedStorage = storage.getAll();
+        Arrays.sort(sortedStorage, Comparator.comparing(Resume::getUuid));
+        assertArrayEquals(remaining, sortedStorage);
     }
 
     @Test
@@ -120,8 +121,14 @@ public class AbstractStorageTest {
     private void assertGetAll(Resume[] expected) {
         assertSize(SIZE_TEST);
         Resume[] sortedStorage = storage.getAll();
-        Arrays.sort(sortedStorage);
+        Arrays.sort(sortedStorage, Comparator.comparing(Resume::getUuid));
         assertArrayEquals(expected, sortedStorage);
+    }
+
+    private Resume[] sort (Resume[] notSortedStorage) {
+        Resume[] sortedStorage = notSortedStorage;
+
+        return sortedStorage;
     }
 
     private void assertGet(Resume resume) {
