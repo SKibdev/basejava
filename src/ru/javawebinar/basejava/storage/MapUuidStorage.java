@@ -2,12 +2,9 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-// сравнить с Абстраксторожом и наконец вынести лишнее от массивов в абстрактаррайсторож
-public class MapStorage extends AbstractStorage<String> {
+public class MapUuidStorage extends AbstractStorage<String> {
     protected final Map<String, Resume> storage = new HashMap<>();
 
     @Override
@@ -16,9 +13,11 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     @Override
-    public Resume[] getAll() {
+    public List<Resume> getAllSorted() {
         Collection<Resume> resumes = storage.values();
-        return resumes.toArray(new Resume[0]);
+        List<Resume> listResumes = new ArrayList<>(resumes);
+        listResumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        return listResumes;
     }
 
     @Override
