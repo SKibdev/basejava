@@ -4,10 +4,17 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class AbstractStorage<T> implements Storage {
-    public final void update(Resume r) {
+    public final List<Resume> getAllSorted() {
+        List<Resume> listStorage = getList();
+        listStorage.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        return listStorage;
+    }
+
+     public final void update(Resume r) {
         T searchKey = getExistingSearchKey(r.getUuid());
         doUpdate(searchKey, r);
     }
@@ -45,9 +52,9 @@ public abstract class AbstractStorage<T> implements Storage {
 
     public abstract void clear();
 
-    public abstract List<Resume> getAllSorted();
-
     public abstract int size();
+
+    protected abstract List<Resume> getList();
 
     protected abstract void doUpdate(T searchKey, Resume r);
 
