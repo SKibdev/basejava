@@ -3,7 +3,6 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage<Integer> {
@@ -15,8 +14,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        storage.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+    public List<Resume> getList() {
         return storage;
     }
 
@@ -27,7 +25,7 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected boolean isExist(Integer searchKey) {
-        return searchKey >= 0;
+        return searchKey != null;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class ListStorage extends AbstractStorage<Integer> {
                 return i;
             }
         }
-        return -1;
+        return null;
     }
 }
 
