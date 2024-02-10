@@ -12,7 +12,12 @@ public class Resume {
     private final String fullName;
 
     public Resume() {
-        this(UUID.randomUUID().toString(), ("fullName " + UUID.randomUUID()));
+        this(UUID.randomUUID().toString(), "");
+    }
+
+    Resume(String fullName) {
+        uuid = UUID.randomUUID().toString();
+        this.fullName = fullName;
     }
 
     public Resume(String uuid, String fullName) {
