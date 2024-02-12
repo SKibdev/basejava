@@ -20,29 +20,34 @@ public class MainArray {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
-            System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | clear | exit): ");
+            System.out.print("Введите одну из команд - (list | size | save fullName | delete uuid | get uuid | update uuid fullName | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
-            if (params.length < 1 || params.length > 2) {
+            if (params.length < 1 || params.length > 3) {
                 System.out.println("Неверная команда.");
                 continue;
             }
-            String uuid = null;
+            String param = null;
             if (params.length == 2) {
-                uuid = params[1].intern();
+                param = params[1].intern();
             }
             switch (params[0]) {
                 case "list" -> printAll();
                 case "size" -> System.out.println(ARRAY_STORAGE.size());
                 case "save" -> {
-                    r = new Resume(uuid, "fullName");
+                    r = new Resume(param);
                     ARRAY_STORAGE.save(r);
                     printAll();
                 }
-                case "delete" -> {
-                    ARRAY_STORAGE.delete(uuid);
+                case "update" -> {
+                    r = new Resume(param, params[2]);
+                    ARRAY_STORAGE.update(r);
                     printAll();
                 }
-                case "get" -> System.out.println(ARRAY_STORAGE.get(uuid));
+                case "delete" -> {
+                    ARRAY_STORAGE.delete(param);
+                    printAll();
+                }
+                case "get" -> System.out.println(ARRAY_STORAGE.get(param));
                 case "clear" -> {
                     ARRAY_STORAGE.clear();
                     printAll();

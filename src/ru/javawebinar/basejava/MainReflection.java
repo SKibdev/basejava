@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 public class MainReflection {
     public static void main(String[] args) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Resume r = new Resume();
+        Resume r = new Resume("dummy");
         /* Тип Class<? extends Resume> представляет собой параметризованный тип:
         1. Class: Это встроенный класс в Java, который используется для представления информации о классе во время
         выполнения. Объект типа Class содержит метаданные о классе, такие как его поля, методы, интерфейсы и т. д.
