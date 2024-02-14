@@ -5,42 +5,42 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.*;
 
 public class MapUuidStorage extends AbstractStorage<String> {
-    protected final Map<String, Resume> storage = new HashMap<>();
+    protected final Map<String, Resume> map = new HashMap<>();
 
     @Override
     public void clear() {
-        storage.clear();
+        map.clear();
     }
 
     @Override
-    public List<Resume> getList() {
-        Collection<Resume> resumes = storage.values();
+    public List<Resume> doCopyAll() {
+        Collection<Resume> resumes = map.values();
         return new ArrayList<>(resumes);
     }
 
     @Override
     public int size() {
-        return storage.size();
+        return map.size();
     }
 
     @Override
-    protected void doUpdate(String searchKey, Resume r) {
-        storage.put(searchKey, r);
+    protected void doUpdate(Resume r, String searchKey) {
+        map.put(searchKey, r);
     }
 
     @Override
-    protected void doSave(String searchKey, Resume r) {
-        storage.put(searchKey, r);
+    protected void doSave(Resume r, String searchKey) {
+        map.put(searchKey, r);
     }
 
     @Override
     protected Resume doGet(String searchKey) {
-        return storage.get(searchKey);
+        return map.get(searchKey);
     }
 
     @Override
     protected void doDelete(String searchKey) {
-        storage.remove(searchKey);
+        map.remove(searchKey);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
 
     @Override
     protected boolean isExist(String searchKey) {
-        return storage.containsKey(searchKey);
+        return map.containsKey(searchKey);
     }
 }
 

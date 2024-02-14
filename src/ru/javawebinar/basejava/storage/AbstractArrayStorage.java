@@ -25,7 +25,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
      * @return array, contains only Resumes in storage (without null)
      */
     @Override
-    public List<Resume> getList() {
+    public List<Resume> doCopyAll() {
         Resume[] arrayStorage = Arrays.copyOf(storage, size);
         return new ArrayList<>(Arrays.asList(arrayStorage));
     }
@@ -36,12 +36,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void doUpdate(Integer searchKey, Resume r) {
+    protected void doUpdate(Resume r, Integer searchKey) {
         storage[searchKey] = r;
     }
 
     @Override
-    protected void doSave(Integer searchKey, Resume r) {
+    protected void doSave(Resume r, Integer searchKey) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Error: Storage overflow!", r.getUuid());
         }

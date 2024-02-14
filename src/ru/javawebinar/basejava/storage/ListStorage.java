@@ -6,21 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage<Integer> {
-    protected final ArrayList<Resume> storage = new ArrayList<>();
+    protected final ArrayList<Resume> list = new ArrayList<>();
 
     @Override
     public final void clear() {
-        storage.clear();
+        list.clear();
     }
 
     @Override
-    public List<Resume> getList() {
-        return storage;
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(list);
     }
 
     @Override
     public int size() {
-        return storage.size();
+        return list.size();
     }
 
     @Override
@@ -29,29 +29,29 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void doSave(Integer searchKey, Resume r) {
-        storage.add(r);
+    protected void doSave(Resume r, Integer searchKey) {
+        list.add(r);
     }
 
     @Override
-    protected void doUpdate(Integer searchKey, Resume r) {
-        storage.set(searchKey, r);
+    protected void doUpdate(Resume r, Integer searchKey) {
+        list.set(searchKey, r);
     }
 
     @Override
     protected final Resume doGet(Integer searchKey) {
-        return storage.get(searchKey);
+        return list.get(searchKey);
     }
 
     @Override
     protected final void doDelete(Integer searchKey) {
-        storage.remove((int) searchKey);
+        list.remove((int) searchKey);
     }
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }

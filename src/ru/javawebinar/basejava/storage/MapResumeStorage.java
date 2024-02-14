@@ -5,49 +5,49 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage<Resume> {
-    protected final Map<String, Resume> storage = new HashMap<>();
+    protected final Map<String, Resume> map = new HashMap<>();
 
     @Override
     public void clear() {
-        storage.clear();
+        map.clear();
     }
 
     @Override
-    public List<Resume> getList() {
-        Collection<Resume> resumes = storage.values();
+    public List<Resume> doCopyAll() {
+        Collection<Resume> resumes = map.values();
         return new ArrayList<>(resumes);
     }
 
     @Override
     public int size() {
-        return storage.size();
+        return map.size();
     }
 
     @Override
-    protected void doUpdate(Resume searchKey, Resume r) {
-        storage.put(searchKey.getUuid(), r);
+    protected void doUpdate(Resume r, Resume searchKey) {
+        map.put(searchKey.getUuid(), r);
     }
 
     @Override
-    protected void doSave(Resume searchKey, Resume r) {
+    protected void doSave(Resume r, Resume searchKey) {
         // Если doSave запустился, значит searchKey = null
         String keyMap = r.getUuid();
-        storage.put(keyMap, r);
+        map.put(keyMap, r);
     }
 
     @Override
     protected Resume doGet(Resume searchKey) {
-        return storage.get(searchKey.getUuid());
+        return searchKey;
     }
 
     @Override
     protected void doDelete(Resume searchKey) {
-        storage.remove(searchKey.getUuid());
+        map.remove(searchKey.getUuid());
     }
 
     @Override
     protected Resume getSearchKey(String uuid) {
-        return storage.get(uuid);
+        return map.get(uuid);
     }
 
     @Override

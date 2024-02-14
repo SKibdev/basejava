@@ -12,19 +12,19 @@ public abstract class AbstractStorage<T> implements Storage {
             Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
     public final List<Resume> getAllSorted() {
-        List<Resume> listStorage = getList();
+        List<Resume> listStorage = doCopyAll();
         listStorage.sort(FULLNAME_COMPARATOR);
         return listStorage;
     }
 
     public final void update(Resume r) {
         T searchKey = getExistingSearchKey(r.getUuid());
-        doUpdate(searchKey, r);
+        doUpdate(r, searchKey);
     }
 
     public final void save(Resume r) {
         T searchKey = getNotExistingSearchKey(r.getUuid());
-        doSave(searchKey, r);
+        doSave(r, searchKey);
     }
 
     public final Resume get(String uuid) {
@@ -57,11 +57,11 @@ public abstract class AbstractStorage<T> implements Storage {
 
     public abstract int size();
 
-    protected abstract List<Resume> getList();
+    protected abstract List<Resume> doCopyAll();
 
-    protected abstract void doUpdate(T searchKey, Resume r);
+    protected abstract void doUpdate(Resume r, T searchKey);
 
-    protected abstract void doSave(T searchKey, Resume r);
+    protected abstract void doSave(Resume r, T searchKey);
 
     protected abstract Resume doGet(T searchKey);
 
