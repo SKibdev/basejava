@@ -7,7 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class AbstractStorage<T> implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
     private final static Comparator<Resume> FULLNAME_COMPARATOR =
             Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
@@ -18,35 +18,35 @@ public abstract class AbstractStorage<T> implements Storage {
     }
 
     public final void update(Resume r) {
-        T searchKey = getExistingSearchKey(r.getUuid());
+        SK searchKey = getExistingSearchKey(r.getUuid());
         doUpdate(r, searchKey);
     }
 
     public final void save(Resume r) {
-        T searchKey = getNotExistingSearchKey(r.getUuid());
+        SK searchKey = getNotExistingSearchKey(r.getUuid());
         doSave(r, searchKey);
     }
 
     public final Resume get(String uuid) {
-        T searchKey = getExistingSearchKey(uuid);
+        SK searchKey = getExistingSearchKey(uuid);
         return doGet(searchKey);
     }
 
     public final void delete(String uuid) {
-        T searchKey = getExistingSearchKey(uuid);
+        SK searchKey = getExistingSearchKey(uuid);
         doDelete(searchKey);
     }
 
-    private T getExistingSearchKey(String uuid) {
-        T searchKey = getSearchKey(uuid);
+    private SK getExistingSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             return searchKey;
         }
         throw new NotExistStorageException(uuid);
     }
 
-    private T getNotExistingSearchKey(String uuid) {
-        T searchKey = getSearchKey(uuid);
+    private SK getNotExistingSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             return searchKey;
         }
@@ -59,15 +59,15 @@ public abstract class AbstractStorage<T> implements Storage {
 
     protected abstract List<Resume> doCopyAll();
 
-    protected abstract void doUpdate(Resume r, T searchKey);
+    protected abstract void doUpdate(Resume r, SK searchKey);
 
-    protected abstract void doSave(Resume r, T searchKey);
+    protected abstract void doSave(Resume r, SK searchKey);
 
-    protected abstract Resume doGet(T searchKey);
+    protected abstract Resume doGet(SK searchKey);
 
-    protected abstract void doDelete(T searchKey);
+    protected abstract void doDelete(SK searchKey);
 
-    protected abstract T getSearchKey(String uuid);
+    protected abstract SK getSearchKey(String uuid);
 
-    protected abstract boolean isExist(T searchKey);
+    protected abstract boolean isExist(SK searchKey);
 }
