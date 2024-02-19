@@ -23,6 +23,9 @@ public class TestSingleton {
         for (SectionType type : SectionType.values()) {
             System.out.println(type.getTitle());
         }
+
+
+        System.out.println(SectionType.ACHIEVEMENT.getTitle());
     }
 
     public enum Singleton {
