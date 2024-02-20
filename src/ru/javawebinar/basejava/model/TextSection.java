@@ -4,9 +4,13 @@ import java.util.Objects;
 
 public class TextSection extends Section {
 
-    private final String text;
-    public TextSection(SectionType sectionType) {
-        text = sectionType.getTitle();
+    private String text;
+    public TextSection() {
+        text = "";
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getText() {
