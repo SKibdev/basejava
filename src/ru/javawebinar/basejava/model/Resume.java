@@ -22,33 +22,13 @@ public class Resume {
         createSections();
     }
 
-    private void createContacts() {
-        for(ContactType contactType : ContactType.values()) {
-            contacts.put(contactType, "");
-        }
-    }
-    private void createSections() {
-        for(SectionType sectionType : SectionType.values()) {
-            sections.put(sectionType, createSection(sectionType));
-        }
-    }
-// TO DO
-    private static Section createSection(SectionType sectionType) {
-        switch (sectionType) {
-            case PERSONAL, OBJECTIVE: return new TextSection(sectionType);
-            case ACHIEVEMENT, QUALIFICATIONS: return new ListSection(sectionType);
-//            case EXPERIENCE, EDUCATION: return new CompanySection(sectionType);
-            default:
-                throw new IllegalArgumentException("Неизвестный тип SectionType: " + sectionType);
-        }
-    }
-
-
     public Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid most not be null");
         Objects.requireNonNull(uuid, "fullName most not be null");
         this.uuid = uuid;
         this.fullName = fullName;
+        createContacts();
+        createSections();
     }
 
     public String getUuid() {
@@ -80,5 +60,24 @@ public class Resume {
     @Override
     public String toString() {
         return uuid + '(' + fullName + ')';
+    }
+
+    private void createContacts() {
+        for(ContactType contactType : ContactType.values()) {
+            contacts.put(contactType, "");
+        }
+    }
+    private void createSections() {
+        for(SectionType sectionType : SectionType.values()) {
+            sections.put(sectionType, createSection(sectionType));
+        }
+    }
+
+    private static Section createSection(SectionType sectionType) {
+        return switch (sectionType) {
+            case PERSONAL, OBJECTIVE -> new TextSection();
+            case ACHIEVEMENT, QUALIFICATIONS -> new ListSection();
+            case EXPERIENCE, EDUCATION -> new OrganizationSection();
+        };
     }
 }
