@@ -1,15 +1,19 @@
 package ru.javawebinar.basejava.model;
 
-public class Period {
-    String startDate = "Начало, ММ/ГГГГ";
-    String endDate = "Окончание, ММ/ГГГГ";
-    String title = "Заголовок";
-    String description = "Описание";
+import java.time.LocalDate;
 
-    public Period(String startDate, String endDate, String title, String description) {
+public class Period {
+    LocalDate startDate;
+    LocalDate endDate;
+    String title;
+    String description;
+
+    public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
         this.description = description;
     }
+
+
 }
