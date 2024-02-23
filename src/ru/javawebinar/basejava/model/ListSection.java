@@ -11,12 +11,20 @@ public class ListSection extends Section {
         list = new ArrayList<>();
     }
 
-    public List<String> getList() {
+    public List<String> getAll() {
         return new ArrayList<>(list);
     }
 
     public void setList(List<String> list) {
         this.list = list;
+    }
+
+    public void setElement(String s) {
+        list.add(s);
+    }
+
+    public void removeElement(String s) {
+        list.remove(s);
     }
 
     @Override
