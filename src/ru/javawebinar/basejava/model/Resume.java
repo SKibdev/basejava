@@ -1,9 +1,6 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -13,8 +10,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private final Map<ContactType,String> contacts = new HashMap<>();
-    private final Map<SectionType,Section> sections = new HashMap<>();
+    private final Map<ContactType, String> contacts = new HashMap<>();
+    private final Map<SectionType, Section> sections = new HashMap<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -37,6 +34,27 @@ public class Resume {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public <K, V> ArrayList<V> getAllMapValues(Map<K, V> map) {
+        Collection<V> mapToList = map.values();
+        return new ArrayList<>(mapToList);
+    }
+
+    public <K, V> void saveToMap(Map<K, V> map, K key, V value) {
+        map.put(key, value);
+    }
+
+    public <K, V> void removeMapValue(Map<K, V> map, K key) {
+        map.remove(key);
+    }
+
+    public <K, V> V getMapValue(Map<K, V> map, K key) {
+        return map.get(key);
+    }
+
+    public <K, V> int sizeMap(Map<K, V> map) {
+        return map.size();
     }
 
     @Override
@@ -63,12 +81,13 @@ public class Resume {
     }
 
     private void createContacts() {
-        for(ContactType contactType : ContactType.values()) {
+        for (ContactType contactType : ContactType.values()) {
             contacts.put(contactType, "");
         }
     }
+
     private void createSections() {
-        for(SectionType sectionType : SectionType.values()) {
+        for (SectionType sectionType : SectionType.values()) {
             sections.put(sectionType, createSection(sectionType));
         }
     }
