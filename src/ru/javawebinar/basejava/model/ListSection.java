@@ -11,8 +11,9 @@ public class ListSection extends Section {
         list = new ArrayList<>();
     }
 
-    public List<String> getAll() {
-        return new ArrayList<>(list);
+     @Override
+     public List<String> getList() {
+        return list;
     }
 
     public void setList(List<String> list) {
@@ -46,7 +47,7 @@ public class ListSection extends Section {
     public String toString() {
         StringBuilder listToString = new StringBuilder();
         for (String value : list) {
-            listToString.append(value);
+            listToString.append(value).append("\n");
         }
         return listToString.toString();
     }

@@ -1,5 +1,15 @@
 package ru.javawebinar.basejava.model;
 
-public abstract class Section {
+import java.util.List;
+
+public abstract class Section  {
+
+    public  void setText(String text) {
+
+    }
+
+    public List<String> getList() {
+        return null;
+    }
 
 }
