@@ -15,5 +15,9 @@ public class Period {
         this.description = description;
     }
 
-
+    @Override
+    public String toString() {
+        return  startDate + " - " + endDate + "\n" +
+                title + "\n" + description;
+    }
 }

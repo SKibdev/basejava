@@ -36,8 +36,10 @@ public class OrganizationSection extends Section {
 
     @Override
     public String toString() {
-        return "OrganizationSection{" +
-                "organizations=" + organizations +
-                '}';
+        StringBuilder listToString = new StringBuilder();
+        for (Organization value : organizations) {
+            listToString.append(value);
+        }
+        return listToString.toString();
     }
 }

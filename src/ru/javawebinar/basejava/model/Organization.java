@@ -63,10 +63,7 @@ public class Organization {
 
     @Override
     public String toString() {
-        return "Organization{" +
-                "name='" + name + '\'' +
-                ", website='" + website + '\'' +
-                ", periods=" + periods +
-                '}';
+        return name + '(' + website + ')' + "\n" +
+                periods;
     }
 }

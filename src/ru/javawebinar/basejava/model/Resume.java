@@ -36,6 +36,14 @@ public class Resume {
         return fullName;
     }
 
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
     public <K, V> ArrayList<V> getAllMapValues(Map<K, V> map) {
         Collection<V> mapToList = map.values();
         return new ArrayList<>(mapToList);

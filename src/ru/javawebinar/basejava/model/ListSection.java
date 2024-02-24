@@ -44,8 +44,10 @@ public class ListSection extends Section {
 
     @Override
     public String toString() {
-        return "ListSection{" +
-                "list=" + list +
-                '}';
+        StringBuilder listToString = new StringBuilder();
+        for (String value : list) {
+            listToString.append(value);
+        }
+        return listToString.toString();
     }
 }
