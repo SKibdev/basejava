@@ -5,9 +5,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class Organization {
-    String name = "Название";
-    String website = "Ссылка";
-    List<Period> periods = new ArrayList<>();
+    String name;
+    String website;
+    List<Period> periods;
+
+    public Organization(String name, String website) {
+        this.name = name;
+        this.website = website;
+        periods = new ArrayList<>();
+    }
 
     public String getName() {
         return name;
@@ -27,18 +33,6 @@ public class Organization {
 
     public List<Period> getPeriods() {
         return periods;
-    }
-
-    public void setPeriod(Period period) {
-        periods.add(period);
-    }
-
-    public void removePeriod(Period period) {
-        periods.add(period);
-    }
-
-    public void updatePeriod(Period period) {
-        periods.set(periods.indexOf(period), period);
     }
 
     @Override
@@ -63,7 +57,11 @@ public class Organization {
 
     @Override
     public String toString() {
+        StringBuilder listToString = new StringBuilder();
+        for (Period value : periods) {
+            listToString.append(value);
+        }
         return name + '(' + website + ')' + "\n" +
-                periods;
+                listToString;
     }
 }

@@ -44,27 +44,6 @@ public class Resume {
         return sections;
     }
 
-    public <K, V> ArrayList<V> getAllMapValues(Map<K, V> map) {
-        Collection<V> mapToList = map.values();
-        return new ArrayList<>(mapToList);
-    }
-
-    public <K, V> void saveToMap(Map<K, V> map, K key, V value) {
-        map.put(key, value);
-    }
-
-    public <K, V> void removeMapValue(Map<K, V> map, K key) {
-        map.remove(key);
-    }
-
-    public <K, V> V getMapValue(Map<K, V> map, K key) {
-        return map.get(key);
-    }
-
-    public <K, V> int sizeMap(Map<K, V> map) {
-        return map.size();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -15,11 +15,6 @@ public class OrganizationSection extends Section {
         return organizations;
     }
 
-
-    public void setOrganizations(List<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,7 +34,7 @@ public class OrganizationSection extends Section {
     public String toString() {
         StringBuilder listToString = new StringBuilder();
         for (Organization value : organizations) {
-            listToString.append(value);
+            listToString.append(value).append("\n");
         }
         return listToString.toString();
     }
