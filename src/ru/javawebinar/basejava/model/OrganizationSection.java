@@ -2,7 +2,6 @@ package ru.javawebinar.basejava.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class OrganizationSection extends Section {
     private final List<Organization> organizations;
@@ -22,12 +21,12 @@ public class OrganizationSection extends Section {
 
         OrganizationSection that = (OrganizationSection) o;
 
-        return Objects.equals(organizations, that.organizations);
+        return organizations.equals(that.organizations);
     }
 
     @Override
     public int hashCode() {
-        return organizations != null ? organizations.hashCode() : 0;
+        return organizations.hashCode();
     }
 
     @Override
