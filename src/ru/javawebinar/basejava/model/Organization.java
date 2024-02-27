@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Organization {
-    String name;
-    String website;
-    List<Period> periods;
+    private String name;
+    private String website;
+    private final List<Period> periods;
 
     public Organization(String name, String website) {
         this.name = name;
