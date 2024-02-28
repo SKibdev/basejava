@@ -10,13 +10,13 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private final Map<ContactType, String> contacts = new HashMap<>();
-    private final Map<SectionType, Section> sections = new HashMap<>();
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
-        createContacts();
-        createSections();
+//        createContacts();
+//        createSections();
     }
 
     public Resume(String uuid, String fullName) {
@@ -24,8 +24,8 @@ public class Resume {
         Objects.requireNonNull(uuid, "fullName most not be null");
         this.uuid = uuid;
         this.fullName = fullName;
-        createContacts();
-        createSections();
+//        createContacts();
+//        createSections();
     }
 
     public String getUuid() {
@@ -36,12 +36,12 @@ public class Resume {
         return fullName;
     }
 
-    public Map<ContactType, String> getContacts() {
-        return contacts;
+    public String getContact(ContactType type) {
+        return contacts.get(type);
     }
 
-    public Map<SectionType, Section> getSections() {
-        return sections;
+    public Section getSection(SectionType type) {
+        return sections.get(type);
     }
 
     @Override
@@ -67,23 +67,23 @@ public class Resume {
         return uuid + '(' + fullName + ')';
     }
 
-    private void createContacts() {
-        for (ContactType contactType : ContactType.values()) {
-            contacts.put(contactType, "");
-        }
-    }
+//    private void createContacts() {
+//        for (ContactType contactType : ContactType.values()) {
+//            contacts.put(contactType, "");
+//        }
+//    }
+//
+//    private void createSections() {
+//        for (SectionType sectionType : SectionType.values()) {
+//            sections.put(sectionType, createSection(sectionType));
+//        }
+//    }
 
-    private void createSections() {
-        for (SectionType sectionType : SectionType.values()) {
-            sections.put(sectionType, createSection(sectionType));
-        }
-    }
-
-    private static Section createSection(SectionType sectionType) {
-        return switch (sectionType) {
-            case PERSONAL, OBJECTIVE -> new TextSection();
-            case ACHIEVEMENT, QUALIFICATIONS -> new ListSection();
-            case EXPERIENCE, EDUCATION -> new OrganizationSection();
-        };
-    }
+//    private static Section createSection(SectionType sectionType) {
+//        return switch (sectionType) {
+//            case PERSONAL, OBJECTIVE -> new TextSection();
+//            case ACHIEVEMENT, QUALIFICATIONS -> new ListSection();
+//            case EXPERIENCE, EDUCATION -> new OrganizationSection();
+//        };
+//    }
 }

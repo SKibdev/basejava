@@ -1,12 +1,9 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.List;
-import java.util.Map;
-
-import static ru.javawebinar.basejava.model.ContactType.*;
-import static ru.javawebinar.basejava.model.SectionType.*;
-
 public class ResumeTestData {
+
+}
+    /*
     private final static Resume RESUME_TEST = new Resume("uuid1", "Name1");
     private final static Map<ContactType, String> CONTACTS = RESUME_TEST.getContacts();
     private final static Map<SectionType, Section> SECTIONS = RESUME_TEST.getSections();
@@ -68,28 +65,28 @@ public class ResumeTestData {
 
 
     public static void main(String[] args) {
-        CONTACTS.put(TELEPHONE, "+7(921) 855-0482");
+        CONTACTS.put(PHONE, "+7(921) 855-0482");
         CONTACTS.put(SKYPE, "skype:grigory.kislin");
         CONTACTS.put(EMAIL, "gkislin@yandex.ru");
         CONTACTS.put(LINKEDIN, "https://www.linkedin.com/in/gkislin");
         CONTACTS.put(GITHUB, "https://github.com/gkislin");
         CONTACTS.put(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        CONTACTS.put(HOMEPAGE, "http://gkislin.ru/");
+        CONTACTS.put(HOME_PAGE, "http://gkislin.ru/");
 
         TextSection objective = (TextSection) SECTIONS.get(OBJECTIVE);
-        objective.setText(OBJECTIVE_1);
+        objective.setContent(OBJECTIVE_1);
         TextSection personal = (TextSection) SECTIONS.get(PERSONAL);
-        personal.setText(PERSONAL_1);
+        personal.setContent(PERSONAL_1);
 
         List<String> achievementList = List.of(ACHIEVEMENT_1, ACHIEVEMENT_2, ACHIEVEMENT_3, ACHIEVEMENT_4,
                 ACHIEVEMENT_5, ACHIEVEMENT_6, ACHIEVEMENT_7);
         ListSection achievement = (ListSection) SECTIONS.get(ACHIEVEMENT);
-        achievement.getList().addAll(achievementList);
+        achievement.getItems().addAll(achievementList);
 
         List<String> qualificationsList = List.of(QUALIFICATIONS_1, QUALIFICATIONS_2, QUALIFICATIONS_3,
                 QUALIFICATIONS_4);
         ListSection qualifications = (ListSection) SECTIONS.get(QUALIFICATIONS);
-        qualifications.getList().addAll(qualificationsList);
+        qualifications.getItems().addAll(qualificationsList);
 
         OrganizationSection organizations = (OrganizationSection) SECTIONS.get(EXPERIENCE);
         organizations.getOrganizations().add(ORGANIZATION_1);
@@ -118,4 +115,4 @@ public class ResumeTestData {
             System.out.println(type + "\n" + SECTIONS.get(type));
         }
     }
-}
+}*/
