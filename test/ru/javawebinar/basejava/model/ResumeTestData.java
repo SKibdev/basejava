@@ -76,27 +76,31 @@ public class ResumeTestData {
         CONTACTS.put(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         CONTACTS.put(HOMEPAGE, "http://gkislin.ru/");
 
-        SECTIONS.get(OBJECTIVE).setText(OBJECTIVE_1);
-        SECTIONS.get(PERSONAL).setText(PERSONAL_1);
+        TextSection objective = (TextSection) SECTIONS.get(OBJECTIVE);
+        objective.setText(OBJECTIVE_1);
+        TextSection personal = (TextSection) SECTIONS.get(PERSONAL);
+        personal.setText(PERSONAL_1);
 
         List<String> achievementList = List.of(ACHIEVEMENT_1, ACHIEVEMENT_2, ACHIEVEMENT_3, ACHIEVEMENT_4,
                 ACHIEVEMENT_5, ACHIEVEMENT_6, ACHIEVEMENT_7);
-        SECTIONS.get(ACHIEVEMENT).getList().addAll(achievementList);
+        ListSection achievement = (ListSection) SECTIONS.get(ACHIEVEMENT);
+        achievement.getList().addAll(achievementList);
 
         List<String> qualificationsList = List.of(QUALIFICATIONS_1, QUALIFICATIONS_2, QUALIFICATIONS_3,
                 QUALIFICATIONS_4);
-        SECTIONS.get(QUALIFICATIONS).getList().addAll(qualificationsList);
+        ListSection qualifications = (ListSection) SECTIONS.get(QUALIFICATIONS);
+        qualifications.getList().addAll(qualificationsList);
 
-        List<Organization> organizations = SECTIONS.get(EXPERIENCE).getOrganizations();
-        organizations.add(ORGANIZATION_1);
+        OrganizationSection organizations = (OrganizationSection) SECTIONS.get(EXPERIENCE);
+        organizations.getOrganizations().add(ORGANIZATION_1);
         ORGANIZATION_1.getPeriods().add(PERIOD_1_ORGANIZATION_1);
-        organizations.add(ORGANIZATION_2);
+        organizations.getOrganizations().add(ORGANIZATION_2);
         ORGANIZATION_2.getPeriods().add(PERIOD_1_ORGANIZATION_2);
 
-        List<Organization> institutions = SECTIONS.get(EDUCATION).getOrganizations();
-        institutions.add(EDUCATIONAL_INSTITUTION_1);
+        OrganizationSection institutions = (OrganizationSection) SECTIONS.get(EDUCATION);
+        institutions.getOrganizations().add(EDUCATIONAL_INSTITUTION_1);
         EDUCATIONAL_INSTITUTION_1.getPeriods().add(PERIOD_1_EDUCATIONAL_INSTITUTION_1);
-        institutions.add(EDUCATIONAL_INSTITUTION_2);
+        institutions.getOrganizations().add(EDUCATIONAL_INSTITUTION_2);
         EDUCATIONAL_INSTITUTION_2.getPeriods().add(PERIOD_1_EDUCATIONAL_INSTITUTION_2);
         EDUCATIONAL_INSTITUTION_2.getPeriods().add(PERIOD_2_EDUCATIONAL_INSTITUTION_2);
         showResume(RESUME_TEST);

@@ -11,7 +11,6 @@ public class ListSection extends Section {
         list = new ArrayList<>();
     }
 
-    @Override
     public List<String> getList() {
         return list;
     }
