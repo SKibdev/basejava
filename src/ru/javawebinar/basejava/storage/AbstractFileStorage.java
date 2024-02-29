@@ -10,6 +10,7 @@ import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private final File directory;
+
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
@@ -19,6 +20,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
         this.directory = directory;
     }
+
     @Override
     public void clear() {
 
@@ -36,7 +38,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doUpdate(Resume r, File file) {
-
+        doWrite(r, file);
     }
 
     @Override
@@ -58,7 +60,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-
+        if (file.delete()) {
+            System.out.println("Файл успешно удален.");
+        } else {
+            System.out.println("Не удалось удалить файл.");
+        }
     }
 
     @Override
