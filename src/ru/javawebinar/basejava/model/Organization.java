@@ -1,15 +1,14 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Organization {
     private final Link homePage;
     private final List<Period> periods;
 
-    public Organization(String name, String url) {
+    public Organization(String name, String url, List<Period> periods) {
         this.homePage = new Link(name, url);
-        periods = new ArrayList<>();
+        this.periods = periods;
     }
 
     public List<Period> getPeriods() {

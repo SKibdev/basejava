@@ -1,6 +1,9 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Initial resume class
@@ -15,8 +18,6 @@ public class Resume {
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
-//        createContacts();
-//        createSections();
     }
 
     public Resume(String uuid, String fullName) {
@@ -24,8 +25,7 @@ public class Resume {
         Objects.requireNonNull(uuid, "fullName most not be null");
         this.uuid = uuid;
         this.fullName = fullName;
-//        createContacts();
-//        createSections();
+
     }
 
     public String getUuid() {
@@ -40,8 +40,15 @@ public class Resume {
         return contacts.get(type);
     }
 
+    public void setContact(ContactType type, String contact) {
+        contacts.put(type, contact);
+    }
+
     public Section getSection(SectionType type) {
         return sections.get(type);
+    }
+    public void setSection(SectionType type, Section data) {
+        sections.put(type, data);
     }
 
     @Override
@@ -66,24 +73,4 @@ public class Resume {
     public String toString() {
         return uuid + '(' + fullName + ')';
     }
-
-//    private void createContacts() {
-//        for (ContactType contactType : ContactType.values()) {
-//            contacts.put(contactType, "");
-//        }
-//    }
-//
-//    private void createSections() {
-//        for (SectionType sectionType : SectionType.values()) {
-//            sections.put(sectionType, createSection(sectionType));
-//        }
-//    }
-
-//    private static Section createSection(SectionType sectionType) {
-//        return switch (sectionType) {
-//            case PERSONAL, OBJECTIVE -> new TextSection();
-//            case ACHIEVEMENT, QUALIFICATIONS -> new ListSection();
-//            case EXPERIENCE, EDUCATION -> new OrganizationSection();
-//        };
-//    }
 }
