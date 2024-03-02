@@ -86,8 +86,8 @@ public class ResumeTestData {
     private final static List<Organization> EDUCATIONAL_INSTITUTIONS = List.of(EDUCATIONAL_INSTITUTION_1,
             EDUCATIONAL_INSTITUTION_2);
 
-    private static void createResume(String uuid1, String name1) {
-        resumeTest = new Resume("uuid1", "Name1");
+    public static Resume createResume(String uuid, String name) {
+        resumeTest = new Resume(uuid, name);
         resumeTest.setContact(PHONE, "+7(921) 855-0482");
         resumeTest.setContact(SKYPE, "skype:grigory.kislin");
         resumeTest.setContact(EMAIL, "gkislin@yandex.ru");
@@ -95,13 +95,13 @@ public class ResumeTestData {
         resumeTest.setContact(GITHUB, "https://github.com/gkislin");
         resumeTest.setContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         resumeTest.setContact(HOME_PAGE, "http://gkislin.ru/");
-
         createSection(OBJECTIVE, OBJECTIVE_1);
         createSection(PERSONAL, PERSONAL_1);
         createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);
         createSection(QUALIFICATIONS, QUALIFICATIONS_LIST);
         createSection(EXPERIENCE, ORGANIZATIONS);
         createSection(EDUCATION, EDUCATIONAL_INSTITUTIONS);
+        return resumeTest;
     }
 
     public static void showResume(Resume resumeTest) {

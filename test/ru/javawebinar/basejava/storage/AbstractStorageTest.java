@@ -5,26 +5,28 @@ import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.ResumeTestData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 public class AbstractStorageTest {
     protected static final int SIZE_TEST = 3;
     protected static final String UUID_1 = "uuid1";
     protected static final String NAME_1 = "fullName1";
-    protected static final Resume RESUME_UUID_1 = new Resume(UUID_1, NAME_1);
+    protected static final Resume RESUME_UUID_1 = ResumeTestData.createResume(UUID_1, NAME_1);
     protected static final String UUID_2 = "uuid2";
     protected static final String NAME_2 = "fullName2";
-    protected static final Resume RESUME_UUID_2 = new Resume(UUID_2, NAME_2);
+    protected static final Resume RESUME_UUID_2 = ResumeTestData.createResume(UUID_2, NAME_2);
     protected static final String UUID_3 = "uuid3";
     protected static final String NAME_3 = "fullName3";
-    protected static final Resume RESUME_UUID_3 = new Resume(UUID_3, NAME_3);
+    protected static final Resume RESUME_UUID_3 = ResumeTestData.createResume(UUID_3, NAME_3);
     protected static final String UUID_4 = "uuid4";
     protected static final String NAME_4 = "fullName4";
-    protected static final Resume RESUME_UUID_4 = new Resume(UUID_4, NAME_4);
+    protected static final Resume RESUME_UUID_4 = ResumeTestData.createResume(UUID_4, NAME_4);
     protected static final String UUID_NOT_EXIST = "dummy";
 
     protected final Storage storage;
