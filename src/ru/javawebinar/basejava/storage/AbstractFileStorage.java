@@ -25,25 +25,49 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] files = directory.listFiles();
-        for (File file : Objects.requireNonNull(files)) {
-            doDelete(file);
+        try {
+            if (files == null) {
+                throw new StorageException("The directory does not exist or an I/O error occurred",
+                        directory.getName());
+            }
+            for (File file : files) {
+                doDelete(file);
+            }
+        } catch (SecurityException e) {
+            throw new StorageException("Read access to the directory is denied", directory.getName(), e);
         }
     }
 
     @Override
     public int size() {
         String[] filesList = directory.list();
-        return filesList != null ? filesList.length : 0;
+        int size;
+        try {
+            if (filesList == null) {
+                throw new StorageException("The directory does not exist or an I/O error occurred",
+                        directory.getName());
+            }
+            size = filesList.length;
+        } catch (SecurityException e) {
+            throw new StorageException("Read access to the directory is denied", directory.getName(), e);
+        }
+        return size;
     }
 
     @Override
     protected List<Resume> doCopyAll() {
         File[] files = directory.listFiles();
         List<Resume> resumes = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                resumes.add(doRead(file));
+        try {
+            if (files == null) {
+                throw new StorageException("The directory does not exist or an I/O error occurred",
+                        directory.getName());
             }
+            for (File file : files) {
+                resumes.add(this.doGet(file));
+            }
+        } catch (SecurityException e) {
+            throw new StorageException("Read access to the directory is denied", directory.getName(), e);
         }
         return resumes;
     }
@@ -63,15 +87,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-    protected abstract void doWrite(Resume r, File file);
-
-    @Override
-    protected Resume doGet(File file) {
-        return doRead(file);
-    }
-
-    protected abstract Resume doRead(File file);
-
     @Override
     protected void doDelete(File file) {
         if (!file.delete()) {
@@ -88,4 +103,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected boolean isExist(File file) {
         return file.exists();
     }
+
+    protected abstract void doWrite(Resume r, File file);
+
+    @Override
+    protected abstract Resume doGet(File file);
 }
