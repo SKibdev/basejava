@@ -50,35 +50,35 @@ public class ResumeTestData {
     private final static List<String> QUALIFICATIONS_LIST = List.of(QUALIFICATIONS_1, QUALIFICATIONS_2, QUALIFICATIONS_3,
             QUALIFICATIONS_4);
 
-    private final static Period PERIOD_1_ORGANIZATION_1 = new Period(of(2013, Month.of(10)),
+    private final static Organization.Position POSITION_1_ORGANIZATION_1 = new Organization.Position(of(2013, Month.of(10)),
             of(2024, Month.of(2)), "Автор проекта.",
             "Создание, организация и проведение Java онлайн проектов и стажировок.");
-    private static final List<Period> PERIODS_ORGANIZATION_1 = List.of(PERIOD_1_ORGANIZATION_1);
+    private static final List<Organization.Position> PERIODS_ORGANIZATION_1 = List.of(POSITION_1_ORGANIZATION_1);
     private final static Organization ORGANIZATION_1 = new Organization("Java Online Projects",
             "http://javaops.ru/", PERIODS_ORGANIZATION_1);
 
-    private final static Period PERIOD_1_ORGANIZATION_2 = new Period(of(2014, Month.of(10)),
+    private final static Organization.Position POSITION_1_ORGANIZATION_2 = new Organization.Position(of(2014, Month.of(10)),
             of(2016, Month.of(1)), "Старший разработчик (backend)",
             "Проектирование и разработка онлайн платформы управления" +
                     " проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
                     "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
-    private final static List<Period> PERIODS_ORGANIZATION_2 = List.of(PERIOD_1_ORGANIZATION_2);
+    private final static List<Organization.Position> PERIODS_ORGANIZATION_2 = List.of(POSITION_1_ORGANIZATION_2);
     private final static Organization ORGANIZATION_2 = new Organization("Wrike", "https://www.wrike.com/",
             PERIODS_ORGANIZATION_2);
     private final static List<Organization> ORGANIZATIONS = List.of(ORGANIZATION_1, ORGANIZATION_2);
 
-    private final static Period PERIOD_1_EDUCATIONAL_INSTITUTION_1 = new Period(of(2013, Month.of(3)),
+    private final static Organization.Position POSITION_1_EDUCATIONAL_INSTITUTION_1 = new Organization.Position(of(2013, Month.of(3)),
             of(2013, Month.of(5)), "'Functional Programming Principles in Scala' by Martin Odersky",
             "");
-    private static final List<Period> PERIODS_EDUCATIONAL_INSTITUTION_1 = List.of(PERIOD_1_EDUCATIONAL_INSTITUTION_1);
+    private static final List<Organization.Position> PERIODS_EDUCATIONAL_INSTITUTION_1 = List.of(POSITION_1_EDUCATIONAL_INSTITUTION_1);
     private final static Organization EDUCATIONAL_INSTITUTION_1 = new Organization("Coursera",
             "https://www.coursera.org/course/progfun", PERIODS_EDUCATIONAL_INSTITUTION_1);
-    private static final Period PERIOD_1_EDUCATIONAL_INSTITUTION_2 = new Period(of(1993, Month.of(9)),
+    private static final Organization.Position POSITION_1_EDUCATIONAL_INSTITUTION_2 = new Organization.Position(of(1993, Month.of(9)),
             of(1996, Month.of(7)), "Аспирантура (программист С, С++)", "");
-    private static final Period PERIOD_2_EDUCATIONAL_INSTITUTION_2 = new Period(of(1987, Month.of(9)),
+    private static final Organization.Position POSITION_2_EDUCATIONAL_INSTITUTION_2 = new Organization.Position(of(1987, Month.of(9)),
             of(1993, Month.of(7)), "Инженер (программист Fortran, C)", "");
-    private final static List<Period> PERIODS_EDUCATIONAL_INSTITUTION_2 = List.of(PERIOD_1_EDUCATIONAL_INSTITUTION_2,
-            PERIOD_2_EDUCATIONAL_INSTITUTION_2);
+    private final static List<Organization.Position> PERIODS_EDUCATIONAL_INSTITUTION_2 = List.of(POSITION_1_EDUCATIONAL_INSTITUTION_2,
+            POSITION_2_EDUCATIONAL_INSTITUTION_2);
     private final static Organization EDUCATIONAL_INSTITUTION_2 = new Organization("Санкт-Петербургский " +
             "национальный исследовательский университет информационных технологий, механики и оптики",
             "http://www.ifmo.ru/", PERIODS_EDUCATIONAL_INSTITUTION_2);
@@ -88,13 +88,13 @@ public class ResumeTestData {
 
     public static Resume createResume(String uuid, String name) {
         resumeTest = new Resume(uuid, name);
-        resumeTest.setContact(PHONE, "+7(921) 855-0482");
-        resumeTest.setContact(SKYPE, "skype:grigory.kislin");
-        resumeTest.setContact(EMAIL, "gkislin@yandex.ru");
-        resumeTest.setContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        resumeTest.setContact(GITHUB, "https://github.com/gkislin");
-        resumeTest.setContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        resumeTest.setContact(HOME_PAGE, "http://gkislin.ru/");
+        resumeTest.addContact(PHONE, "+7(921) 855-0482");
+        resumeTest.addContact(SKYPE, "skype:grigory.kislin");
+        resumeTest.addContact(EMAIL, "gkislin@yandex.ru");
+        resumeTest.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        resumeTest.addContact(GITHUB, "https://github.com/gkislin");
+        resumeTest.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+        resumeTest.addContact(HOME_PAGE, "http://gkislin.ru/");
         createSection(OBJECTIVE, OBJECTIVE_1);
         createSection(PERSONAL, PERSONAL_1);
         createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);
@@ -119,11 +119,11 @@ public class ResumeTestData {
 
     private static void createSection(SectionType sectionType, Object data) {
         switch (sectionType) {
-            case PERSONAL, OBJECTIVE -> resumeTest.setSection(sectionType, new TextSection((String) data));
+            case PERSONAL, OBJECTIVE -> resumeTest.addSection(sectionType, new TextSection((String) data));
             case ACHIEVEMENT, QUALIFICATIONS ->
-                    resumeTest.setSection(sectionType, new ListSection((List<String>) data));
+                    resumeTest.addSection(sectionType, new ListSection((List<String>) data));
             case EXPERIENCE, EDUCATION ->
-                    resumeTest.setSection(sectionType, new OrganizationSection((List<Organization>) data));
+                    resumeTest.addSection(sectionType, new OrganizationSection((List<Organization>) data));
         }
     }
 }
