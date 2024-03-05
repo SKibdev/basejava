@@ -25,16 +25,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] files = directory.listFiles();
-        try {
-            if (files == null) {
-                throw new StorageException("The directory does not exist or an I/O error occurred",
-                        directory.getName());
-            }
-            for (File file : files) {
-                doDelete(file);
-            }
-        } catch (SecurityException e) {
-            throw new StorageException("Read access to the directory is denied", directory.getName(), e);
+        if (files == null) {
+            throw new StorageException("The directory does not exist or an I/O error occurred",
+                    directory.getName());
+        }
+        for (File file : files) {
+            doDelete(file);
         }
     }
 
@@ -42,15 +38,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     public int size() {
         String[] filesList = directory.list();
         int size;
-        try {
-            if (filesList == null) {
-                throw new StorageException("The directory does not exist or an I/O error occurred",
-                        directory.getName());
-            }
-            size = filesList.length;
-        } catch (SecurityException e) {
-            throw new StorageException("Read access to the directory is denied", directory.getName(), e);
+        if (filesList == null) {
+            throw new StorageException("The directory does not exist or an I/O error occurred",
+                    directory.getName());
         }
+        size = filesList.length;
         return size;
     }
 
@@ -58,16 +50,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> doCopyAll() {
         File[] files = directory.listFiles();
         List<Resume> resumes = new ArrayList<>();
-        try {
-            if (files == null) {
-                throw new StorageException("The directory does not exist or an I/O error occurred",
-                        directory.getName());
-            }
-            for (File file : files) {
-                resumes.add(this.doGet(file));
-            }
-        } catch (SecurityException e) {
-            throw new StorageException("Read access to the directory is denied", directory.getName(), e);
+        if (files == null) {
+            throw new StorageException("The directory does not exist or an I/O error occurred",
+                    directory.getName());
+        }
+        for (File file : files) {
+            resumes.add(doGet(file));
         }
         return resumes;
     }
