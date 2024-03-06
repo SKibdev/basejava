@@ -53,35 +53,31 @@ public class ResumeTestData {
     private final static Organization.Position POSITION_1_ORGANIZATION_1 = new Organization.Position(of(2013, Month.of(10)),
             of(2024, Month.of(2)), "Автор проекта.",
             "Создание, организация и проведение Java онлайн проектов и стажировок.");
-    private static final List<Organization.Position> PERIODS_ORGANIZATION_1 = List.of(POSITION_1_ORGANIZATION_1);
     private final static Organization ORGANIZATION_1 = new Organization("Java Online Projects",
-            "http://javaops.ru/", PERIODS_ORGANIZATION_1);
+            "http://javaops.ru/", POSITION_1_ORGANIZATION_1);
 
     private final static Organization.Position POSITION_1_ORGANIZATION_2 = new Organization.Position(of(2014, Month.of(10)),
             of(2016, Month.of(1)), "Старший разработчик (backend)",
             "Проектирование и разработка онлайн платформы управления" +
                     " проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
                     "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
-    private final static List<Organization.Position> PERIODS_ORGANIZATION_2 = List.of(POSITION_1_ORGANIZATION_2);
     private final static Organization ORGANIZATION_2 = new Organization("Wrike", "https://www.wrike.com/",
-            PERIODS_ORGANIZATION_2);
+            POSITION_1_ORGANIZATION_2);
     private final static List<Organization> ORGANIZATIONS = List.of(ORGANIZATION_1, ORGANIZATION_2);
 
     private final static Organization.Position POSITION_1_EDUCATIONAL_INSTITUTION_1 = new Organization.Position(of(2013, Month.of(3)),
             of(2013, Month.of(5)), "'Functional Programming Principles in Scala' by Martin Odersky",
             "");
-    private static final List<Organization.Position> PERIODS_EDUCATIONAL_INSTITUTION_1 = List.of(POSITION_1_EDUCATIONAL_INSTITUTION_1);
     private final static Organization EDUCATIONAL_INSTITUTION_1 = new Organization("Coursera",
-            "https://www.coursera.org/course/progfun", PERIODS_EDUCATIONAL_INSTITUTION_1);
+            "https://www.coursera.org/course/progfun", POSITION_1_EDUCATIONAL_INSTITUTION_1);
     private static final Organization.Position POSITION_1_EDUCATIONAL_INSTITUTION_2 = new Organization.Position(of(1993, Month.of(9)),
             of(1996, Month.of(7)), "Аспирантура (программист С, С++)", "");
     private static final Organization.Position POSITION_2_EDUCATIONAL_INSTITUTION_2 = new Organization.Position(of(1987, Month.of(9)),
             of(1993, Month.of(7)), "Инженер (программист Fortran, C)", "");
-    private final static List<Organization.Position> PERIODS_EDUCATIONAL_INSTITUTION_2 = List.of(POSITION_1_EDUCATIONAL_INSTITUTION_2,
-            POSITION_2_EDUCATIONAL_INSTITUTION_2);
+
     private final static Organization EDUCATIONAL_INSTITUTION_2 = new Organization("Санкт-Петербургский " +
             "национальный исследовательский университет информационных технологий, механики и оптики",
-            "http://www.ifmo.ru/", PERIODS_EDUCATIONAL_INSTITUTION_2);
+            "http://www.ifmo.ru/", POSITION_1_EDUCATIONAL_INSTITUTION_2, POSITION_2_EDUCATIONAL_INSTITUTION_2);
 
     private final static List<Organization> EDUCATIONAL_INSTITUTIONS = List.of(EDUCATIONAL_INSTITUTION_1,
             EDUCATIONAL_INSTITUTION_2);
