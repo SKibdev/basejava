@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.ResumeTestData;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class AbstractStorageTest {
+    protected final static File STORAGE_DIR = new File("S:\\java\\basejava\\storage");
     protected static final int SIZE_TEST = 3;
     protected static final String UUID_1 = "uuid1";
     protected static final String NAME_1 = "fullName1";
