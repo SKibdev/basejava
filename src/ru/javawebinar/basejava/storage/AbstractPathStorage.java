@@ -3,14 +3,15 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class AbstractPathStorage extends AbstractStorage<Path> {
+public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private Path directory;
 
     public AbstractPathStorage(String dir) {
@@ -24,7 +25,7 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     public void clear() {
         try {
-            Files.list(directory).forEach(this ::doDelete);
+            Files.list(directory).forEach(this::doDelete);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null);
         }
@@ -32,7 +33,12 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        return 0;
+        try {
+            List<Path> filesList = Files.list(directory).collect(Collectors.toList());
+            return filesList.size();
+        } catch (IOException e) {
+            throw new StorageException("The directory does not exist or an I/O error occurred", null, e);
+        }
     }
 
     @Override
@@ -41,18 +47,22 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected void doUpdate(Resume r, Path searchKey) {
+    protected void doUpdate(Resume r, Path path) {
 
     }
 
     @Override
-    protected void doSave(Resume r, Path searchKey) {
+    protected void doSave(Resume r, Path path) {
 
     }
 
     @Override
-    protected Resume doGet(Path searchKey) {
-        return null;
+    protected Resume doGet(Path path) {
+        try {
+            return doRead(Files.newInputStream(path));
+        } catch (IOException e) {
+            throw new StorageException("File read error", path.getFileName().toString(), e);
+        }
     }
 
     @Override
@@ -70,7 +80,11 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected boolean isExist(Path searchKey) {
+    protected boolean isExist(Path path) {
         return false;
     }
+
+    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
+
+    protected abstract Resume doRead(InputStream is) throws IOException;
 }
