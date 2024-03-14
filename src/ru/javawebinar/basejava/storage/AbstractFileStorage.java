@@ -36,7 +36,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public int size() {
         String[] filesList = directory.list();
-        int size;
         if (filesList == null) {
             throw new StorageException("The directory does not exist or an I/O error occurred", null);
         }
