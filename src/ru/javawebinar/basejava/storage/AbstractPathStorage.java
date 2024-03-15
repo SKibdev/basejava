@@ -3,10 +3,7 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,12 +63,13 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         } catch (IOException e) {
             throw new StorageException("IO error", path.getFileName().toString(), e);
         }
+        doUpdate(r, path);
     }
 
     @Override
     protected void doUpdate(Resume r, Path path) {
         try {
-            doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            doWrite(r, path);
         } catch (IOException e) {
             throw new StorageException("File write error", r.getUuid(), e);
         }
@@ -80,7 +78,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(Files.newInputStream(path));
+            return doRead(path);
         } catch (IOException e) {
             throw new StorageException("File read error", path.getFileName().toString(), e);
         }
@@ -105,7 +103,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         return Files.exists(path);
     }
 
-    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
+    protected abstract void doWrite(Resume r, Path path) throws IOException;
 
-    protected abstract Resume doRead(InputStream is) throws IOException;
+    protected abstract Resume doRead(Path path) throws IOException;
 }
