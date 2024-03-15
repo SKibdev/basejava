@@ -3,16 +3,20 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
-    private Path directory;
+    private final Path directory;
 
     public AbstractPathStorage(String dir) {
         directory = Paths.get(dir);
@@ -24,8 +28,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
+        try (Stream<Path> pathsStream = Files.list(directory)) {
+            pathsStream.forEach(this::doDelete);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null);
         }
@@ -33,9 +37,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        try {
-            List<Path> filesList = Files.list(directory).collect(Collectors.toList());
-            return filesList.size();
+        try (Stream<Path> pathsStream = Files.list(directory)) {
+            List<Path> pathsList = pathsStream.toList();
+            return pathsList.size();
         } catch (IOException e) {
             throw new StorageException("The directory does not exist or an I/O error occurred", null, e);
         }
@@ -43,17 +47,34 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        return null;
-    }
-
-    @Override
-    protected void doUpdate(Resume r, Path path) {
-
+        try (Stream<Path> pathsStream = Files.list(directory)) {
+            List<Path> paths = pathsStream.toList();
+            List<Resume> pathsList = new ArrayList<>(size());
+            for (Path path : paths) {
+                pathsList.add(doGet(path));
+            }
+            return pathsList;
+        } catch (IOException e) {
+            throw new StorageException("The directory does not exist or an I/O error occurred", null, e);
+        }
     }
 
     @Override
     protected void doSave(Resume r, Path path) {
+        try {
+            Files.createFile(path);
+        } catch (IOException e) {
+            throw new StorageException("IO error", path.getFileName().toString(), e);
+        }
+    }
 
+    @Override
+    protected void doUpdate(Resume r, Path path) {
+        try {
+            doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+        } catch (IOException e) {
+            throw new StorageException("File write error", r.getUuid(), e);
+        }
     }
 
     @Override
@@ -76,12 +97,12 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return null;
+        return Paths.get(directory.toString(), uuid);
     }
 
     @Override
     protected boolean isExist(Path path) {
-        return false;
+        return Files.exists(path);
     }
 
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
