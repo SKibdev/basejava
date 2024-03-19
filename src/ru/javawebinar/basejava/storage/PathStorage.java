@@ -101,12 +101,4 @@ public class PathStorage extends AbstractStorage<Path> {
     protected boolean isExist(Path path) {
         return Files.exists(path);
     }
-
-    protected void doWrite(Resume r, OutputStream os) throws IOException {
-
-    }
-
-    protected Resume doRead(InputStream is) throws IOException {
-        return null;
-    }
 }

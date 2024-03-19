@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface SerializationStrategy {
-    public void doWrite(Resume r, OutputStream os) throws IOException;
+    void doWrite(Resume r, OutputStream os) throws IOException;
 
-    public Resume doRead(InputStream is) throws IOException;
+    Resume doRead(InputStream is) throws IOException;
 }
