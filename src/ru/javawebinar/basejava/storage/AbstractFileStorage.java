@@ -23,11 +23,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("The directory does not exist or an I/O error occurred",
-                    null);
-        }
+        File[] files = getFilesFromDirectory();
         for (File file : files) {
             doDelete(file);
         }
@@ -35,19 +31,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        String[] filesList = directory.list();
-        if (filesList == null) {
-            throw new StorageException("The directory does not exist or an I/O error occurred", null);
-        }
-        return filesList.length;
+        return getFilesFromDirectory().length;
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("The directory does not exist or an I/O error occurred", null);
-        }
+        File[] files = getFilesFromDirectory();
         List<Resume> filesList = new ArrayList<>(files.length);
         for (File file : files) {
             filesList.add(doGet(file));
@@ -98,6 +87,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected boolean isExist(File file) {
         return file.exists();
+    }
+
+    private File[] getFilesFromDirectory() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("The directory does not exist or an I/O error occurred", null);
+        }
+        return files;
     }
 
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
