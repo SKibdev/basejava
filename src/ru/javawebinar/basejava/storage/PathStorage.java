@@ -2,8 +2,9 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.serialization.ObjectStreamStorage;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,10 +13,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
-    public AbstractPathStorage(String dir) {
+    public PathStorage(String dir) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -64,8 +65,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected void doUpdate(Resume r, Path path) {
+        setSerializationStrategy(new ObjectStreamStorage());
         try {
-            doWrite(r, path);
+            serializationStrategy.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File write error", r.getUuid(), e);
         }
@@ -73,8 +75,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Resume doGet(Path path) {
+        setSerializationStrategy(new ObjectStreamStorage());
         try {
-            return doRead(path);
+            return serializationStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File read error", path.getFileName().toString(), e);
         }
@@ -99,7 +102,11 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         return Files.exists(path);
     }
 
-    protected abstract void doWrite(Resume r, Path path) throws IOException;
+    protected void doWrite(Resume r, OutputStream os) throws IOException {
 
-    protected abstract Resume doRead(Path path) throws IOException;
+    }
+
+    protected Resume doRead(InputStream is) throws IOException {
+        return null;
+    }
 }
