@@ -15,8 +15,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     protected FileStorage(File directory, SerializationStrategy serializationStrategy) {
         Objects.requireNonNull(directory, "directory must not be null");
-        this.serializationStrategy = serializationStrategy;
 
+        this.serializationStrategy = serializationStrategy;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + "is not directory");
         } else if (!directory.canRead() || !directory.canWrite()) {
@@ -53,7 +53,7 @@ public class FileStorage extends AbstractStorage<File> {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
         doUpdate(r, file);
     }
@@ -96,7 +96,7 @@ public class FileStorage extends AbstractStorage<File> {
     private File[] getFilesFromDirectory() {
         File[] files = directory.listFiles();
         if (files == null) {
-            throw new StorageException("The directory does not exist or an I/O error occurred", null);
+            throw new StorageException("The directory does not exist or an I/O error occurred");
         }
         return files;
     }
