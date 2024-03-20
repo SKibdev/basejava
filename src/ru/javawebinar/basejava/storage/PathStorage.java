@@ -2,9 +2,11 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.storage.serialization.ObjectStreamStorage;
+import ru.javawebinar.basejava.storage.serialization.SerializationStrategy;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,10 +17,13 @@ import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
+    private final SerializationStrategy serializationStrategy;
 
-    public PathStorage(String dir) {
+    public PathStorage(String dir, SerializationStrategy serializationStrategy) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
+        this.serializationStrategy = serializationStrategy;
+
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + "is not directory or is not writable");
         }
@@ -65,7 +70,6 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected void doUpdate(Resume r, Path path) {
-        setSerializationStrategy(new ObjectStreamStorage());
         try {
             serializationStrategy.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
@@ -75,7 +79,6 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Resume doGet(Path path) {
-        setSerializationStrategy(new ObjectStreamStorage());
         try {
             return serializationStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
