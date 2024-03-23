@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Resume implements Serializable {
+public class Resume implements Comparable<Resume>, Serializable {
     private static final long SERIAL_VERSION_UID = 1L;
     // Unique identifier
     private String uuid;
@@ -77,5 +77,11 @@ public class Resume implements Serializable {
     @Override
     public String toString() {
         return uuid + '(' + fullName + ')';
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }
