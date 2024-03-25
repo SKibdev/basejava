@@ -10,18 +10,6 @@ import java.io.Writer;
 public class JsonParser {
     private static Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Section.class, new JsonSectionAdapter())
-//            .registerTypeAdapter(ContactType.class, new JsonDeserializer<Map<String, Object>>() {
-//                @Override
-//                public Map<String, Object> deserialize(JsonElement json1, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-//                    return new Gson().fromJson(json1, typeOfT);
-//                }
-//            })
-//            .registerTypeAdapter(Resume.SectionType.class, new JsonDeserializer<Map<String, Object>>() {
-//                @Override
-//                public Map<String, Object> deserialize(JsonElement json1, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-//                    return new Gson().fromJson(json1, typeOfT);
-//                }
-//            })
             .create();
 
     public static <T> T read(Reader reader, Class<T> clazz) {
