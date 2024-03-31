@@ -73,11 +73,11 @@ public class ResumeTestData {
     private static final Organization.Position POSITION_1_EDUCATIONAL_INSTITUTION_2 = new Organization.Position(of(1993, Month.of(9)),
             of(1996, Month.of(7)), "Аспирантура (программист С, С++)", "");
     private static final Organization.Position POSITION_2_EDUCATIONAL_INSTITUTION_2 = new Organization.Position(of(1987, Month.of(9)),
-            of(1993, Month.of(7)), "Инженер (программист Fortran, C)", "");
+            of(1993, Month.of(7)), "Инженер (программист Fortran, C)", null);
 
     private final static Organization EDUCATIONAL_INSTITUTION_2 = new Organization("Санкт-Петербургский " +
             "национальный исследовательский университет информационных технологий, механики и оптики",
-            "http://www.ifmo.ru/", POSITION_1_EDUCATIONAL_INSTITUTION_2, POSITION_2_EDUCATIONAL_INSTITUTION_2);
+            null, POSITION_1_EDUCATIONAL_INSTITUTION_2, POSITION_2_EDUCATIONAL_INSTITUTION_2);
 
     private final static List<Organization> EDUCATIONAL_INSTITUTIONS = List.of(EDUCATIONAL_INSTITUTION_1,
             EDUCATIONAL_INSTITUTION_2);
