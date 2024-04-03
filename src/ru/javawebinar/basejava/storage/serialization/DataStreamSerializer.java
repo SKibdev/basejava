@@ -4,27 +4,38 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class DataStreamSerializer implements SerializationStrategy {
+
+    @FunctionalInterface
+    interface ConsumerWithIOException<T> {
+        void write(T t) throws IOException;
+    }
+
+    private <T> void writeWithException(Collection<? extends T> collections, DataOutputStream dos,
+                                        ConsumerWithIOException<? super T> action) throws IOException {
+        Objects.requireNonNull(action);
+        dos.writeInt(collections.size());
+        for (T t : collections) {
+            action.write(t);
+        }
+    }
+
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+
+            writeWithException(contacts.entrySet(), dos, entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
 
             Map<SectionType, Section> sections = r.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+            writeWithException(sections.entrySet(), dos, entry -> {
                 dos.writeUTF(entry.getKey().name());
                 switch (entry.getKey()) {
                     case PERSONAL, OBJECTIVE -> {
@@ -33,30 +44,25 @@ public class DataStreamSerializer implements SerializationStrategy {
                     }
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> listSections = ((ListSection) entry.getValue()).getItems();
-                        dos.writeInt(listSections.size());
-                        for (String section : listSections) {
-                            dos.writeUTF(section);
-                        }
+                        writeWithException(listSections, dos, dos::writeUTF);
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
-                        dos.writeInt(organizations.size());
-                        for (Organization organization : organizations) {
+                        writeWithException(organizations, dos, (Organization organization) -> {
                             dos.writeUTF(organization.getHomePage().getName());
-                            dos.writeUTF(Objects.requireNonNullElse(organization.getHomePage().getUrl(), "null"));
+                            dos.writeUTF(Objects.requireNonNullElse(organization.getHomePage().getUrl(),
+                                    "null"));
                             List<Organization.Position> positions = organization.getPositions();
-                            dos.writeInt(positions.size());
-                            for (Organization.Position position : positions) {
+                            writeWithException(positions, dos, (Organization.Position position) -> {
                                 dos.writeUTF(position.getStartDate().toString());
                                 dos.writeUTF(position.getEndDate().toString());
                                 dos.writeUTF(position.getTitle());
                                 dos.writeUTF(Objects.requireNonNullElse(position.getDescription(), "null"));
-                            }
-                        }
+                            });
+                        });
                     }
-                    default -> throw new IllegalStateException("Unexpected value: " + entry.getKey());
                 }
-            }
+            });
         }
     }
 
@@ -67,6 +73,7 @@ public class DataStreamSerializer implements SerializationStrategy {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
             int size = dis.readInt();
+
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
