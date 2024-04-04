@@ -8,20 +8,6 @@ import java.util.*;
 
 public class DataStreamSerializer implements SerializationStrategy {
 
-    @FunctionalInterface
-    interface ConsumerWithIOException<T> {
-        void write(T t) throws IOException;
-    }
-
-    private <T> void writeWithException(Collection<? extends T> collections, DataOutputStream dos,
-                                        ConsumerWithIOException<? super T> action) throws IOException {
-        Objects.requireNonNull(action);
-        dos.writeInt(collections.size());
-        for (T t : collections) {
-            action.write(t);
-        }
-    }
-
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -72,37 +58,32 @@ public class DataStreamSerializer implements SerializationStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
+            readWithException(dis, () ->
+                    resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF())
+            );
 
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int sectionsSize = dis.readInt();
-            for (int i = 0; i < sectionsSize; i++) {
+            readWithException(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        int itemsSize = dis.readInt();
                         List<String> items = new ArrayList<>();
-                        for (int j = 0; j < itemsSize; j++) {
+                        readWithException(dis, () -> {
                             String item = dis.readUTF();
                             items.add(item);
-                        }
+                        });
                         resume.addSection(sectionType, new ListSection(items));
                     }
                     case EXPERIENCE, EDUCATION -> {
-                        int organizationsSize = dis.readInt();
                         List<Organization> organizations = new ArrayList<>();
-                        for (int j = 0; j < organizationsSize; j++) {
+                        readWithException(dis, () -> {
                             String organizationName = dis.readUTF();
                             String organizationUrl = dis.readUTF();
                             if ("null".equals(organizationUrl)) {
                                 organizationUrl = null;
                             }
-                            int positionsSize = dis.readInt();
                             List<Organization.Position> positions = new ArrayList<>();
-                            for (int k = 0; k < positionsSize; k++) {
+                            readWithException(dis, () -> {
                                 LocalDate startDate = LocalDate.parse(dis.readUTF());
                                 LocalDate endDate = LocalDate.parse(dis.readUTF());
                                 String title = dis.readUTF();
@@ -111,15 +92,42 @@ public class DataStreamSerializer implements SerializationStrategy {
                                     description = null;
                                 }
                                 positions.add(new Organization.Position(startDate, endDate, title, description));
-                            }
+                            });
                             organizations.add(new Organization(organizationName, organizationUrl, positions));
-
-                        }
+                        });
                         resume.addSection(sectionType, new OrganizationSection(organizations));
                     }
                 }
-            }
+            });
             return resume;
+        }
+    }
+
+    @FunctionalInterface
+    interface ConsumerReadWithIOException<T> {
+        void read() throws IOException;
+    }
+
+    private <T> void readWithException(DataInputStream dis, ConsumerReadWithIOException<? super T> action)
+            throws IOException {
+        Objects.requireNonNull(action);
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            action.read();
+        }
+    }
+
+    @FunctionalInterface
+    interface ConsumerWriteWithIOException<T> {
+        void write(T t) throws IOException;
+    }
+
+    private <T> void writeWithException(Collection<? extends T> collections, DataOutputStream dos,
+                                        ConsumerWriteWithIOException<? super T> action) throws IOException {
+        Objects.requireNonNull(action);
+        dos.writeInt(collections.size());
+        for (T t : collections) {
+            action.write(t);
         }
     }
 }
