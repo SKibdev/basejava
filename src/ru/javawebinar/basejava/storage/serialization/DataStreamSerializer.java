@@ -103,9 +103,13 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
-    @FunctionalInterface
-    interface ConsumerReadWithIOException<T> {
-        void read() throws IOException;
+    private <T> void writeWithException(Collection<? extends T> collections, DataOutputStream dos,
+                                        ConsumerWriteWithIOException<? super T> action) throws IOException {
+        Objects.requireNonNull(action);
+        dos.writeInt(collections.size());
+        for (T t : collections) {
+            action.write(t);
+        }
     }
 
     private <T> void readWithException(DataInputStream dis, ConsumerReadWithIOException<? super T> action)
@@ -122,12 +126,8 @@ public class DataStreamSerializer implements SerializationStrategy {
         void write(T t) throws IOException;
     }
 
-    private <T> void writeWithException(Collection<? extends T> collections, DataOutputStream dos,
-                                        ConsumerWriteWithIOException<? super T> action) throws IOException {
-        Objects.requireNonNull(action);
-        dos.writeInt(collections.size());
-        for (T t : collections) {
-            action.write(t);
-        }
+    @FunctionalInterface
+    interface ConsumerReadWithIOException<T> {
+        void read() throws IOException;
     }
 }
