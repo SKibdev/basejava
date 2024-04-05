@@ -67,23 +67,17 @@ public class DataStreamSerializer implements SerializationStrategy {
                 switch (sectionType) {
                     case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> items = new ArrayList<>();
-                        readWithException(dis, () -> {
-                            String item = dis.readUTF();
-                            items.add(item);
-                        });
+                        List<String> items = readListWithException(dis, dis::readUTF);
                         resume.addSection(sectionType, new ListSection(items));
                     }
                     case EXPERIENCE, EDUCATION -> {
-                        List<Organization> organizations = new ArrayList<>();
-                        readWithException(dis, () -> {
+                        List<Organization> organizations = readListWithException(dis, () -> {
                             String organizationName = dis.readUTF();
                             String organizationUrl = dis.readUTF();
                             if ("null".equals(organizationUrl)) {
                                 organizationUrl = null;
                             }
-                            List<Organization.Position> positions = new ArrayList<>();
-                            readWithException(dis, () -> {
+                            List<Organization.Position> positions = readListWithException(dis, () -> {
                                 LocalDate startDate = LocalDate.parse(dis.readUTF());
                                 LocalDate endDate = LocalDate.parse(dis.readUTF());
                                 String title = dis.readUTF();
@@ -91,9 +85,9 @@ public class DataStreamSerializer implements SerializationStrategy {
                                 if ("null".equals(description)) {
                                     description = null;
                                 }
-                                positions.add(new Organization.Position(startDate, endDate, title, description));
+                                return new Organization.Position(startDate, endDate, title, description);
                             });
-                            organizations.add(new Organization(organizationName, organizationUrl, positions));
+                            return new Organization(organizationName, organizationUrl, positions);
                         });
                         resume.addSection(sectionType, new OrganizationSection(organizations));
                     }
@@ -121,6 +115,16 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
+    private <T> List<T> readListWithException(DataInputStream dis, ConsumerReadItem<T> itemReader) throws IOException {
+        Objects.requireNonNull(itemReader);
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(itemReader.readItem());
+        }
+        return list;
+    }
+
     @FunctionalInterface
     interface ConsumerWriteWithIOException<T> {
         void write(T t) throws IOException;
@@ -130,4 +134,10 @@ public class DataStreamSerializer implements SerializationStrategy {
     interface ConsumerReadWithIOException<T> {
         void read() throws IOException;
     }
+
+    @FunctionalInterface
+    interface ConsumerReadItem<T> {
+        T readItem() throws IOException;
+    }
+
 }
