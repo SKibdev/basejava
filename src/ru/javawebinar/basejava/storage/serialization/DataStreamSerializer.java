@@ -97,8 +97,8 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
-    private <T> void writeWithException(Collection<? extends T> collections, DataOutputStream dos,
-                                        ConsumerWriteWithIOException<? super T> action) throws IOException {
+    private <T> void writeWithException(Collection<T> collections, DataOutputStream dos,
+                                        ConsumerWriteWithIOException<T> action) throws IOException {
         Objects.requireNonNull(action);
         dos.writeInt(collections.size());
         for (T t : collections) {
@@ -139,5 +139,4 @@ public class DataStreamSerializer implements SerializationStrategy {
     interface ConsumerReadItem<T> {
         T readItem() throws IOException;
     }
-
 }
