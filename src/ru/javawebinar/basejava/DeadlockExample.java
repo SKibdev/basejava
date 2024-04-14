@@ -4,8 +4,8 @@ public class DeadlockExample {
     private int counter0;
     private int counter1;
 
-    private final static Object LOCK_0 = new Object();
-    private final static Object LOCK_1 = new Object();
+    private final static String LOCK_0 = "LOCK_0";
+    private final static String LOCK_1 = "LOCK_1";
 
     public static void main(String[] args) throws InterruptedException {
         final DeadlockExample deadlockExample = new DeadlockExample();
@@ -18,33 +18,25 @@ public class DeadlockExample {
     }
 
     private void inc0() {
-        synchronized (LOCK_0) {
+        synchronizeCounter(LOCK_0, LOCK_1);
+    }
+
+    private synchronized void inc1() {
+        synchronizeCounter(LOCK_1, LOCK_0);
+    }
+
+    private void synchronizeCounter(Object lock0, Object lock1) {
+        synchronized (lock0) {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             counter0++;
-            System.out.println(Thread.currentThread().getName() + " получил блокировку LOCK_0 " + counter0);
-            synchronized (LOCK_1) {
+            System.out.println(Thread.currentThread().getName() + " получил блокировку " + lock0 + " " + counter0);
+            synchronized (lock1) {
                 counter1++;
-                System.out.println(Thread.currentThread().getName() + " получил блокировку LOCK_1 " + counter1);
-            }
-        }
-    }
-
-    private synchronized void inc1() {
-        synchronized (LOCK_1) {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            counter1++;
-            System.out.println(Thread.currentThread().getName() + " получил блокировку LOCK_1 " + counter1);
-            synchronized (LOCK_0) {
-                counter0++;
-                System.out.println(Thread.currentThread().getName() + " получил блокировку LOCK_0 " + counter0);
+                System.out.println(Thread.currentThread().getName() + " получил блокировку " + lock1 + " " + counter1);
             }
         }
     }
