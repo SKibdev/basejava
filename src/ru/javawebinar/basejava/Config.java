@@ -11,7 +11,7 @@ public class Config {
     private static final Config INSTANCE = new Config();
 
     private Properties props = new Properties();
-    private File storageDir;
+    private final File storageDir;
 
     public static Config get() {
         return INSTANCE;
