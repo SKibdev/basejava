@@ -9,9 +9,12 @@ import ru.javawebinar.basejava.sql.ConnectionFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 
 public class SqlStorage implements Storage {
     public final ConnectionFactory connectionFactory;
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         connectionFactory = new ConnectionFactory() {
@@ -24,6 +27,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
+        LOG.info("clear");
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM resume")) {
             ps.execute();
@@ -34,6 +38,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
+        LOG.info("Update " + r);
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
             ps.setString(1, r.getFullName());
@@ -46,6 +51,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume r) {
+        LOG.info("Save " + r);
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
             ps.setString(1, r.getUuid());
@@ -58,6 +64,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
+        LOG.info("Get " + uuid);
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")) {
             ps.setString(1, uuid);
@@ -74,6 +81,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
+        LOG.info("Delete " + uuid);
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM resume WHERE uuid =?")) {
             ps.setString(1, uuid);
@@ -90,6 +98,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
         List<Resume> resumes = new ArrayList<>();
         String sql = "SELECT TRIM(uuid) AS uuid, TRIM(full_name) AS full_name FROM resume ORDER BY uuid";
 
@@ -108,6 +117,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
+        LOG.info("size ");
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM resume")) {
             ResultSet rs = ps.executeQuery();
