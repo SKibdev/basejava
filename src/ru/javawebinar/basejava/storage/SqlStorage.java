@@ -1,12 +1,9 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.sql.ConnectionFactory;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -16,12 +13,10 @@ import java.util.logging.Logger;
 public class SqlStorage implements Storage {
 
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
-    public SqlHelper sqlHelper;
-    public ConnectionFactory connectionFactory;
+    private final SqlHelper sqlHelper;
 
-    public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
-        connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-        sqlHelper = new SqlHelper(connectionFactory);
+    public SqlStorage() {
+        sqlHelper = new SqlHelper();
     }
 
     @Override
@@ -46,10 +41,7 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume r) {
         LOG.info("Save " + r);
-        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", (ps) -> {
-            if (isExist(r.getUuid())) {
-                throw new ExistStorageException(r.getUuid());
-            }
+        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", r.getUuid(), (ps) -> {
             ps.setString(1, r.getUuid());
             ps.setString(2, r.getFullName());
             ps.execute();
@@ -86,7 +78,7 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
         List<Resume> resumes = new ArrayList<>();
-        String sql = "SELECT TRIM(uuid) AS uuid, TRIM(full_name) AS full_name FROM resume ORDER BY uuid";
+        String sql = "SELECT uuid, full_name FROM resume ORDER BY full_name";
 
         return sqlHelper.execute(sql, (ps) -> {
             ResultSet rs = ps.executeQuery();
@@ -103,10 +95,7 @@ public class SqlStorage implements Storage {
         LOG.info("size ");
         return sqlHelper.execute("SELECT COUNT(*) FROM resume", (ps) -> {
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                return 0;
-            }
-            return rs.getInt(1);
+            return !rs.next() ? 0 : rs.getInt(1);
         });
     }
 

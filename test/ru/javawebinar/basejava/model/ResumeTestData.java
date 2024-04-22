@@ -80,8 +80,8 @@ public class ResumeTestData {
     private final static List<Organization> EDUCATIONAL_INSTITUTIONS = List.of(EDUCATIONAL_INSTITUTION_1,
             EDUCATIONAL_INSTITUTION_2);
 
-    public static Resume createResume(String uuid, String name) {
-        resumeTest = new Resume(uuid, name);
+    public static Resume createResume(String name) {
+        resumeTest = new Resume(name);
 //        resumeTest.addContact(PHONE, "+7(921) 855-0482");
 //        resumeTest.addContact(SKYPE, "skype:grigory.kislin");
 //        resumeTest.addContact(EMAIL, "gkislin@yandex.ru");
