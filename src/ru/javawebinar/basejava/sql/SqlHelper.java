@@ -14,10 +14,10 @@ public class SqlHelper {
                 .getConnection(Config.get().getDbUrl(), Config.get().getDbUser(), Config.get().getDbPassword());
     }
 
-    public <T> T execute(String sql, String uuid, SqlConnector<T> connector) {
+    public <T> void execute(String sql, String uuid, SqlConnector<T> connector) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            return connector.execute(ps);
+            connector.execute(ps);
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
                 throw new ExistStorageException(uuid);

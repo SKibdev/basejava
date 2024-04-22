@@ -98,15 +98,4 @@ public class SqlStorage implements Storage {
             return !rs.next() ? 0 : rs.getInt(1);
         });
     }
-
-    private boolean isExist(String uuid) {
-        return sqlHelper.execute("SELECT COUNT(*) FROM resume WHERE uuid = ?", (ps) -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                return true;
-            }
-            return false;
-        });
-    }
 }
