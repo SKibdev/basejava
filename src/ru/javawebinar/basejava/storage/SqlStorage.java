@@ -25,7 +25,7 @@ public class SqlStorage implements Storage {
     @Override
     public void clear() {
         LOG.info("clear");
-        sqlHelper.execute("DELETE FROM resume", PreparedStatement::execute);
+        sqlHelper.execute("DELETE FROM resume");
     }
 
     @Override
@@ -45,23 +45,26 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume r) {
         LOG.info("Save " + r);
-        String sql = "INSERT INTO resume (uuid, full_name) VALUES (?,?)";
-        sqlHelper.execute(sql, r.getUuid(), (ps) -> {
-            ps.setString(1, r.getUuid());
-            ps.setString(2, r.getFullName());
-            ps.execute();
+
+        sqlHelper.transactionalExecute(conn -> {
+            String sql1 = "INSERT INTO resume (uuid, full_name) VALUES (?,?)";
+            try (PreparedStatement ps = conn.prepareStatement(sql1)) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, r.getFullName());
+                ps.execute();
+            }
+            String sql2 = "INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)";
+            try (PreparedStatement ps = conn.prepareStatement(sql2)) {
+                for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
+                    ps.setString(1, r.getUuid());
+                    ps.setString(2, entry.getKey().name());
+                    ps.setString(3, entry.getValue());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
             return null;
         });
-
-        for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
-            sql = "INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)";
-            sqlHelper.<Void>execute(sql, ps -> {
-                ps.setString(1, r.getUuid());
-                ps.setString(2, entry.getKey().name());
-                ps.setString(3, entry.getValue());
-                return null;
-            });
-        }
     }
 
     @Override
