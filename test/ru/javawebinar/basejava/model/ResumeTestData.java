@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.model;
 import java.time.Month;
 import java.util.List;
 
+import static ru.javawebinar.basejava.model.ContactType.*;
 import static ru.javawebinar.basejava.util.DateUtil.of;
 
 public class ResumeTestData {
@@ -82,13 +83,13 @@ public class ResumeTestData {
 
     public static Resume createResume(String name) {
         resumeTest = new Resume(name);
-//        resumeTest.addContact(PHONE, "+7(921) 855-0482");
-//        resumeTest.addContact(SKYPE, "skype:grigory.kislin");
-//        resumeTest.addContact(EMAIL, "gkislin@yandex.ru");
-//        resumeTest.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
-//        resumeTest.addContact(GITHUB, "https://github.com/gkislin");
-//        resumeTest.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-//        resumeTest.addContact(HOME_PAGE, "http://gkislin.ru/");
+        resumeTest.addContact(PHONE, "+7(921) 855-0482");
+        resumeTest.addContact(SKYPE, "skype:grigory.kislin");
+        resumeTest.addContact(EMAIL, "gkislin@yandex.ru");
+        resumeTest.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        resumeTest.addContact(GITHUB, "https://github.com/gkislin");
+        resumeTest.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+        resumeTest.addContact(HOME_PAGE, "http://gkislin.ru/");
 //        createSection(OBJECTIVE, OBJECTIVE_1);
 //        createSection(PERSONAL, PERSONAL_1);
 //        createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);

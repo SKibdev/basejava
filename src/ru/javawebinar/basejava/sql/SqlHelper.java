@@ -1,17 +1,17 @@
 package ru.javawebinar.basejava.sql;
 
-import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class SqlHelper {
     private final ConnectionFactory connectionFactory;
 
-    public SqlHelper() {
-        connectionFactory = () -> DriverManager
-                .getConnection(Config.get().getDbUrl(), Config.get().getDbUser(), Config.get().getDbPassword());
+    public SqlHelper(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
     public <T> void execute(String sql, String uuid, SqlConnector<T> connector) {
