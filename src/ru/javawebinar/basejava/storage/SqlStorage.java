@@ -114,7 +114,7 @@ public class SqlStorage implements Storage {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {
-                Resume r = new Resume(rs.getString("uuid"), rs.getString("full_name"));
+                Resume r = get(rs.getString("uuid"));
                 resumes.add(r);
             }
             return resumes;
