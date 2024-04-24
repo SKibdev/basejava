@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static ru.javawebinar.basejava.model.ContactType.PHONE;
 
 public class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
@@ -64,9 +64,10 @@ public class AbstractStorageTest {
 
     @Test
     public void save() {
-        storage.save(RESUME_UUID_4);
+        Resume newResumeUuid2 = new Resume("UUID_2", "dummy");
+        storage.save(newResumeUuid2);
         assertSize(SIZE_TEST + 1);
-        assertGet(RESUME_UUID_4);
+        assertGet(newResumeUuid2);
     }
 
     @Test
@@ -78,6 +79,7 @@ public class AbstractStorageTest {
     @Test
     public void update() {
         Resume newResumeUuid2 = new Resume(UUID_2, "dummy");
+        newResumeUuid2.addContact(PHONE, "99999");
         storage.update(newResumeUuid2);
         assertEquals(newResumeUuid2, storage.get(UUID_2));
     }
