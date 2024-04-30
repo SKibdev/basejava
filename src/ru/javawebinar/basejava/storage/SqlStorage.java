@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -100,30 +101,55 @@ public class SqlStorage implements Storage {
         LOG.info("getAllSorted");
 
         return sqlHelper.transactionalExecute(conn -> {
-            try (PreparedStatement ps =
-                         conn.prepareStatement("" +
-                                         "SELECT * FROM resume r " +
-                                         "    LEFT JOIN contact c " +
-                                         "           ON r.uuid = c.resume_uuid " +
-                                         "     ORDER BY full_name,uuid",
-                                 ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            Map<String, Resume> map = new LinkedHashMap<>();
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name,uuid")) {
                 ResultSet rs = ps.executeQuery();
-
-                List<Resume> resumes = new ArrayList<>();
-
                 while (rs.next()) {
-                    String currentUuid = rs.getString("uuid");
-                    Resume r = new Resume(currentUuid, rs.getString("full_name"));
-                    do {
-                        addContact(r, rs);
-                    } while (rs.next() && currentUuid.equals(rs.getString("uuid")));
-                    rs.previous();
-                    resumes.add(r);
+                    String uuid = rs.getString("uuid");
+                    Resume r = new Resume(uuid, rs.getString("full_name"));
+                    map.put(uuid, r);
                 }
-                return resumes;
             }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String resumeUuid = rs.getString("resume_uuid");
+                    for (Map.Entry<String, Resume> entry : map.entrySet()) {
+                        if (resumeUuid.equals(entry.getKey())) {
+                            addContact(entry.getValue(), rs);
+                        }
+                    }
+                }
+            }
+            return new ArrayList<>(map.values());
         });
     }
+
+
+//        return sqlHelper.transactionalExecute(conn -> {
+//            try (PreparedStatement ps =
+//                         conn.prepareStatement("" +
+//                                         "SELECT * FROM resume r " +
+//                                         "    LEFT JOIN contact c " +
+//                                         "           ON r.uuid = c.resume_uuid " +
+//                                         "     ORDER BY full_name,uuid",
+//                                 ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+//                ResultSet rs = ps.executeQuery();
+//
+//                List<Resume> resumes = new ArrayList<>();
+//
+//                while (rs.next()) {
+//                    String currentUuid = rs.getString("uuid");
+//                    Resume r = new Resume(currentUuid, rs.getString("full_name"));
+//                    do {
+//                        addContact(r, rs);
+//                    } while (rs.next() && currentUuid.equals(rs.getString("uuid")));
+//                    rs.previous();
+//                    resumes.add(r);
+//                }
+//                return resumes;
+//            }
+//        });
 
     @Override
     public int size() {
