@@ -4,6 +4,7 @@ import java.time.Month;
 import java.util.List;
 
 import static ru.javawebinar.basejava.model.ContactType.*;
+import static ru.javawebinar.basejava.model.SectionType.*;
 import static ru.javawebinar.basejava.util.DateUtil.of;
 
 public class ResumeTestData {
@@ -90,10 +91,10 @@ public class ResumeTestData {
         resumeTest.addContact(GITHUB, "https://github.com/gkislin");
         resumeTest.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         resumeTest.addContact(HOME_PAGE, "http://gkislin.ru/");
-//        createSection(OBJECTIVE, OBJECTIVE_1);
-//        createSection(PERSONAL, PERSONAL_1);
-//        createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);
-//        createSection(QUALIFICATIONS, QUALIFICATIONS_LIST);
+        createSection(OBJECTIVE, OBJECTIVE_1);
+        createSection(PERSONAL, PERSONAL_1);
+        createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);
+        createSection(QUALIFICATIONS, QUALIFICATIONS_LIST);
 //        createSection(EXPERIENCE, ORGANIZATIONS);
 //        createSection(EDUCATION, EDUCATIONAL_INSTITUTIONS);
         return resumeTest;
