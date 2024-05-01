@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
@@ -14,7 +15,18 @@ public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
-        sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
+        sqlHelper = new SqlHelper(() -> {
+            Connection conn = null;
+            try {
+                Class.forName("org.postgresql.Driver"); // Загрузка драйвера PostgreSQL
+                conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            } catch (ClassNotFoundException e) {
+                throw new StorageException("Драйвер JDBC для PostgreSQL не найден.",e);
+            } catch (SQLException e) {
+                throw new StorageException("Ошибка при подключении к базе данных PostgreSQL.",e);
+            }
+            return conn;
+        });
     }
 
     @Override
@@ -201,9 +213,7 @@ public class SqlStorage implements Storage {
             String section_value = rs.getString("value_section");
             Section section;
             switch (type) {
-                case PERSONAL, OBJECTIVE -> {
-                    section = new TextSection(section_value);
-                }
+                case PERSONAL, OBJECTIVE -> section = new TextSection(section_value);
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     List<String> items = Arrays.asList(section_value.split("\n"));
                     section = new ListSection(items);
