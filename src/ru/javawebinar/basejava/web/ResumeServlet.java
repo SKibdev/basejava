@@ -20,9 +20,26 @@ public class ResumeServlet extends HttpServlet {
         response.setHeader("Content-Type", "text/html;charset=UTF-8");
         Storage storage = Config.get().getSqlStorage();
         List<Resume> resumes = storage.getAllSorted();
-        response.getWriter().write("БАЗА РЕЗЮМЕ\n");
+        response.getWriter().write("<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<style>\n" +
+                "table, th, td {\n" +
+                "  border:2px solid green;\n" +
+                "}\n" +
+                "H2 { text-align: center }" +
+                "</style>\n" +
+                "<body>" +
+                "<h2>БАЗА РЕЗЮМЕ</h2>" +
+                "<table style=\"width:100%\">\n" +
+                "  <tr>\n" +
+                "    <th>UUID</th>\n" +
+                "    <th>FULL NAME</th>\n" +
+                "  </tr>");
         for (Resume resume : resumes) {
-            response.getWriter().write(resume.getUuid() + " " + resume.getFullName() + "\n");
+            response.getWriter().write("<tr>\n" +
+                    "    <td>" + resume.getUuid() + "</td>\n" +
+                    "    <td>" + resume.getFullName() + "</td>\n" +
+                    "  </tr>");
         }
     }
 
