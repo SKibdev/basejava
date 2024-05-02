@@ -49,8 +49,8 @@ public class SqlStorage implements Storage {
             }
             deleteTable(r, conn, "DELETE FROM contact WHERE resume_uuid =?");
             deleteTable(r, conn, "DELETE FROM section WHERE resume_uuid =?");
-            insertData(r, conn, "contact");
-            insertData(r, conn, "section");
+            insertContacts(r, conn);
+            insertSections(r, conn);
             return null;
         });
     }
@@ -72,8 +72,8 @@ public class SqlStorage implements Storage {
                 ps.setString(2, r.getFullName());
                 ps.execute();
             }
-            insertData(r, conn, "contact");
-            insertData(r, conn, "section");
+            insertContacts(r, conn);
+            insertSections(r, conn);
             return null;
         });
     }
@@ -84,7 +84,7 @@ public class SqlStorage implements Storage {
         return sqlHelper.transactionalExecute(conn -> {
             Resume r;
             try (PreparedStatement ps =
-                         conn.prepareStatement("" +
+                         conn.prepareStatement(
                                  "    SELECT * FROM resume r " +
                                  " LEFT JOIN contact c " +
                                  "        ON r.uuid = c.resume_uuid " +
@@ -167,15 +167,36 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void insertData(Resume r, Connection conn, String tableName) throws SQLException {
-        String sql = "INSERT INTO " + tableName + " (resume_uuid, type, value) VALUES (?,?,?)";
-
+    private void insertContacts(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps =
-                     conn.prepareStatement(sql)) {
-            for (Map.Entry<?, ?> entry : (tableName.equals("contact") ? r.getContacts() : r.getSections()).entrySet()) {
+                     conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
+            for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
                 ps.setString(1, r.getUuid());
-                ps.setString(2, entry.getKey().toString());
-                ps.setString(3, entry.getValue().toString());
+                ps.setString(2, entry.getKey().name());
+                ps.setString(3, entry.getValue());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    private void insertSections(Resume r, Connection conn) throws SQLException {
+        try (PreparedStatement ps =
+                     conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
+            for (Map.Entry<SectionType, Section> entry : r.getSections().entrySet()) {
+                ps.setString(1, r.getUuid());
+                String type = entry.getKey().name();
+                ps.setString(2, type);
+                String value;
+                switch (type) {
+                    case "PERSONAL", "OBJECTIVE" -> value = ((TextSection) entry.getValue()).getContent();
+                    case "ACHIEVEMENT", "QUALIFICATIONS" -> {
+                        List<String> items = ((ListSection) entry.getValue()).getItems();
+                        value = String.join("\n", items);
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + type);
+                }
+                ps.setString(3, value);
                 ps.addBatch();
             }
             ps.executeBatch();
