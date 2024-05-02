@@ -84,20 +84,20 @@ public class SqlStorage implements Storage {
         return sqlHelper.transactionalExecute(conn -> {
             Resume r;
             try (PreparedStatement ps =
-                         conn.prepareStatement(
-                                 "    SELECT * FROM resume r " +
-                                 " LEFT JOIN contact c " +
-                                 "        ON r.uuid = c.resume_uuid " +
-                                 "     WHERE r.uuid =? ")) {
+                         conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid =? ")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
                     throw new NotExistStorageException(uuid);
                 }
                 r = new Resume(uuid, rs.getString("full_name"));
-                do {
+            }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid =?")) {
+                ps.setString(1, uuid);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
                     addContact(r, rs);
-                } while (rs.next());
+                }
             }
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid =?")) {
                 ps.setString(1, uuid);
@@ -136,26 +136,25 @@ public class SqlStorage implements Storage {
                     map.put(uuid, r);
                 }
             }
-            addDataFromTable(conn, map, "contact");
-            addDataFromTable(conn, map, "section");
-            return new ArrayList<>(map.values());
-        });
-    }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String resumeUuid = rs.getString("resume_uuid");
+                    Resume r = map.get(resumeUuid);
+                    addContact(r, rs);
 
-    private void addDataFromTable(Connection conn, Map<String, Resume> map, String nameTable) throws SQLException {
-        String sql = "SELECT * FROM " + nameTable;
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String resumeUuid = rs.getString("resume_uuid");
-
-                for (Map.Entry<String, Resume> entry : map.entrySet()) {
-                    if (resumeUuid.equals(entry.getKey())) {
-                        addDataToResume(entry.getValue(), rs, nameTable);
-                    }
                 }
             }
-        }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String resumeUuid = rs.getString("resume_uuid");
+                    Resume r = map.get(resumeUuid);
+                    addSection(r, rs);
+                }
+            }
+            return new ArrayList<>(map.values());
+        });
     }
 
     @Override
@@ -200,14 +199,6 @@ public class SqlStorage implements Storage {
                 ps.addBatch();
             }
             ps.executeBatch();
-        }
-    }
-
-    private void addDataToResume(Resume r, ResultSet rs, String nameTable) throws SQLException {
-        if (nameTable.equals("contact")) {
-            addContact(r, rs);
-        } else if (nameTable.equals("section")) {
-            addSection(r, rs);
         }
     }
 
