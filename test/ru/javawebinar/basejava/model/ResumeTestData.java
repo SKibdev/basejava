@@ -4,8 +4,10 @@ import java.time.Month;
 import java.util.List;
 
 import static ru.javawebinar.basejava.model.ContactType.*;
+import static ru.javawebinar.basejava.model.ResumeType.*;
 import static ru.javawebinar.basejava.model.SectionType.*;
 import static ru.javawebinar.basejava.util.DateUtil.of;
+
 
 public class ResumeTestData {
 
@@ -82,21 +84,55 @@ public class ResumeTestData {
     private final static List<Organization> EDUCATIONAL_INSTITUTIONS = List.of(EDUCATIONAL_INSTITUTION_1,
             EDUCATIONAL_INSTITUTION_2);
 
-    public static Resume createResume(String name) {
+    public static final String NAME_1 = "fullName1";
+    public static final Resume RESUME_UUID_1 = ResumeTestData.createResume(NAME_1, FULL);
+
+    public static final String NAME_2 = "fullName2";
+    public static final Resume RESUME_UUID_2 = ResumeTestData.createResume(NAME_2, ONLY_SECTIONS);
+
+    public static final String NAME_3 = "fullName3";
+    public static final Resume RESUME_UUID_3 = ResumeTestData.createResume(NAME_3, ONLY_CONTACTS);
+
+    public static final String NAME_4 = "fullName4";
+    public static final Resume RESUME_UUID_4 = ResumeTestData.createResume(NAME_4, FULL);
+
+
+    public static Resume createResume(String name, ResumeType type) {
         resumeTest = new Resume(name);
-        resumeTest.addContact(PHONE, "+7(921) 855-0482");
-        resumeTest.addContact(SKYPE, "skype:grigory.kislin");
-        resumeTest.addContact(EMAIL, "gkislin@yandex.ru");
-        resumeTest.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        resumeTest.addContact(GITHUB, "https://github.com/gkislin");
-        resumeTest.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        resumeTest.addContact(HOME_PAGE, "http://gkislin.ru/");
-        createSection(OBJECTIVE, OBJECTIVE_1);
-        createSection(PERSONAL, PERSONAL_1);
-        createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);
-        createSection(QUALIFICATIONS, QUALIFICATIONS_LIST);
-//        createSection(EXPERIENCE, ORGANIZATIONS);
-//        createSection(EDUCATION, EDUCATIONAL_INSTITUTIONS);
+        switch (type) {
+            case FULL -> {
+                resumeTest.addContact(PHONE, "+7(921) 855-0482");
+                resumeTest.addContact(SKYPE, "skype:grigory.kislin");
+                resumeTest.addContact(EMAIL, "gkislin@yandex.ru");
+                resumeTest.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
+                resumeTest.addContact(GITHUB, "https://github.com/gkislin");
+                resumeTest.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+                resumeTest.addContact(HOME_PAGE, "http://gkislin.ru/");
+                createSection(OBJECTIVE, OBJECTIVE_1);
+                createSection(PERSONAL, PERSONAL_1);
+                createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);
+                createSection(QUALIFICATIONS, QUALIFICATIONS_LIST);
+                createSection(EXPERIENCE, ORGANIZATIONS);
+                createSection(EDUCATION, EDUCATIONAL_INSTITUTIONS);
+            }
+            case ONLY_CONTACTS -> {
+                resumeTest.addContact(PHONE, "77777");
+                resumeTest.addContact(SKYPE, "skype");
+                resumeTest.addContact(EMAIL, "ya@yandex.ru");
+                resumeTest.addContact(LINKEDIN, "https://www.linkedin.com/in/ivan");
+                resumeTest.addContact(GITHUB, "https://github.com/ivan");
+                resumeTest.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/77777");
+                resumeTest.addContact(HOME_PAGE, "http://ivan.ru/");
+            }
+            case ONLY_SECTIONS -> {
+                createSection(OBJECTIVE, OBJECTIVE_1);
+                createSection(PERSONAL, PERSONAL_1);
+                createSection(ACHIEVEMENT, ACHIEVEMENT_LIST);
+                createSection(QUALIFICATIONS, QUALIFICATIONS_LIST);
+                createSection(EXPERIENCE, ORGANIZATIONS);
+                createSection(EDUCATION, EDUCATIONAL_INSTITUTIONS);
+            }
+        }
         return resumeTest;
     }
 

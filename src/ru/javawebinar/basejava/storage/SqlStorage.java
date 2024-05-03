@@ -4,9 +4,13 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.SqlHelper;
+import ru.javawebinar.basejava.util.JsonParser;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
@@ -142,7 +146,6 @@ public class SqlStorage implements Storage {
                     String resumeUuid = rs.getString("resume_uuid");
                     Resume r = map.get(resumeUuid);
                     addContact(r, rs);
-
                 }
             }
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section")) {
@@ -187,15 +190,15 @@ public class SqlStorage implements Storage {
                 String type = entry.getKey().name();
                 ps.setString(2, type);
                 String value;
-                switch (type) {
-                    case "PERSONAL", "OBJECTIVE" -> value = ((TextSection) entry.getValue()).getContent();
-                    case "ACHIEVEMENT", "QUALIFICATIONS" -> {
-                        List<String> items = ((ListSection) entry.getValue()).getItems();
-                        value = String.join("\n", items);
-                    }
-                    default -> throw new IllegalStateException("Unexpected value: " + type);
-                }
-                ps.setString(3, value);
+//                switch (type) {
+//                    case "PERSONAL", "OBJECTIVE" -> value = ((TextSection) entry.getValue()).getContent();
+//                    case "ACHIEVEMENT", "QUALIFICATIONS" -> {
+//                        List<String> items = ((ListSection) entry.getValue()).getItems();
+//                        value = String.join("\n", items);
+//                    }
+//                    default -> throw new IllegalStateException("Unexpected value: " + type);
+//                }
+                ps.setString(3, JsonParser.write(entry.getValue()));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -212,20 +215,10 @@ public class SqlStorage implements Storage {
     }
 
     private void addSection(Resume r, ResultSet rs) throws SQLException {
-        String sectionType = rs.getString("type");
-        if (sectionType != null) {
-            SectionType type = SectionType.valueOf(sectionType);
-            String section_value = rs.getString("value");
-            Section section;
-            switch (type) {
-                case PERSONAL, OBJECTIVE -> section = new TextSection(section_value);
-                case ACHIEVEMENT, QUALIFICATIONS -> {
-                    List<String> items = Arrays.asList(section_value.split("\n"));
-                    section = new ListSection(items);
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + type);
-            }
-            r.addSection(type, section);
+        String section_value = rs.getString("value");
+        if (section_value != null) {
+            SectionType type = SectionType.valueOf(rs.getString("type"));
+            r.addSection(type, JsonParser.read(section_value, Section.class));
         }
     }
 }
