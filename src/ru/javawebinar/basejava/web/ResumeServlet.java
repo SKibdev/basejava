@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.web;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.Storage;
+import ru.javawebinar.basejava.model.ContactType;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,10 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
-    Storage storage;
+    private Storage storage;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -27,26 +29,27 @@ public class ResumeServlet extends HttpServlet {
         response.setHeader("Content-Type", "text/html;charset=UTF-8");
 
         List<Resume> resumes = storage.getAllSorted();
-        response.getWriter().write("<!DOCTYPE html>\n" +
+        Writer writer = response.getWriter();
+        writer.write(
                 "<html>\n" +
-                "<style>\n" +
-                "table, th, td {\n" +
-                "  border:2px solid green;\n" +
-                "}\n" +
-                "H2 { text-align: center }" +
-                "</style>\n" +
-                "<body>" +
-                "<h2>БАЗА РЕЗЮМЕ</h2>" +
-                "<table style=\"width:100%\">\n" +
-                "  <tr>\n" +
-                "    <th>UUID</th>\n" +
-                "    <th>FULL NAME</th>\n" +
-                "  </tr>");
+                        "<head>\n" +
+                        "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                        "    <link rel=\"stylesheet\" href=\"css/style.css\">\n" +
+                        "    <title>Список всех резюме</title>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<section>\n" +
+                        "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">\n" +
+                        "    <tr>\n" +
+                        "        <th>Имя</th>\n" +
+                        "        <th>Email</th>\n" +
+                        "    </tr>\n");
         for (Resume resume : resumes) {
-            response.getWriter().write("<tr>\n" +
-                    "    <td>" + resume.getUuid() + "</td>\n" +
-                    "    <td>" + resume.getFullName() + "</td>\n" +
-                    "  </tr>");
+            writer.write(
+                    "<tr>\n" +
+                            "     <td><a href=\"resume?uuid=" + resume.getUuid() + "\">" + resume.getFullName() + "</a></td>\n" +
+                            "     <td>" + resume.getContact(ContactType.EMAIL) + "</td>\n" +
+                            "</tr>\n");
         }
     }
 
