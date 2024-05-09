@@ -32,7 +32,7 @@
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"
                        pattern="[^\s]+( [^\s]+)*"
                        title="Не допускается ввод начальных, конечных и повторяющихся пробелов"></dd>
-            ></dd>
+            </dd>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">
