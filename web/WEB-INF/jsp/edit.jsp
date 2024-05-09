@@ -10,28 +10,17 @@
     <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume" scope="request"/>
     <title>Резюме ${resume.fullName}</title>
 
-    <script type="text/javascript">
-        function validateForm() {
-            var fullName = document.getElementsByName("fullName")[0].value.trim();
-            if (fullName === "") {
-                alert("Поле 'Имя' не может быть пустым!");
-                return false; // Отменяем отправку формы
-            }
-            return true; // Продолжаем отправку формы
-        }
-    </script>
-
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <form method="post" action="resume" enctype="application/x-www-form-urlencoded" onsubmit="return validateForm();">
+    <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"
                        pattern="[^\s]+( [^\s]+)*"
-                       title="Не допускается ввод начальных, конечных и повторяющихся пробелов"></dd>
+                       title="Не допускается ввод начальных, конечных и повторяющихся пробелов" required></dd>
             </dd>
         </dl>
         <h3>Контакты:</h3>

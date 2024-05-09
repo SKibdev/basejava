@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "resumeServlet", urlPatterns = "/resume")
 public class ResumeServlet extends HttpServlet {
@@ -62,17 +63,17 @@ public class ResumeServlet extends HttpServlet {
         Resume r;
         if (uuid.equals("newResume")) {
             r = new Resume("");
-            fillResume(request, response, r);
+            fillResume(request, r);
             storage.save(r);
         } else {
             r = storage.get(uuid);
-            fillResume(request, response, r);
+            fillResume(request, r);
             storage.update(r);
         }
         response.sendRedirect("resume");
     }
 
-    private void fillResume(HttpServletRequest request, HttpServletResponse response, Resume r) throws ServletException, IOException {
+    private void fillResume(HttpServletRequest request, Resume r) {
         String fullName = request.getParameter("fullName");
         r.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
@@ -91,6 +92,7 @@ public class ResumeServlet extends HttpServlet {
                     case PERSONAL, OBJECTIVE -> section = new TextSection(value);
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> items = Arrays.asList(value.split("\n"));
+                        items = items.stream().filter(s -> !s.trim().isEmpty()).collect(Collectors.toList());
                         section = new ListSection(items);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + type);
