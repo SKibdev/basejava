@@ -1,8 +1,7 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -12,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @WebServlet(name ="resumeServlet", urlPatterns = "/resume")
 public class ResumeServlet extends HttpServlet {
@@ -80,6 +81,23 @@ public class ResumeServlet extends HttpServlet {
                 r.addContact(type, value);
             } else {
                 r.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && !value.trim().isEmpty()) {
+                Section section;
+                switch (type) {
+                    case PERSONAL, OBJECTIVE -> section = new TextSection(value);
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        List<String> items = Arrays.asList(value.split("\n"));
+                        section = new ListSection(items);
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + type);
+                }
+                r.addSection(type, section);
+            } else {
+                r.getSections().remove(type);
             }
         }
     }
