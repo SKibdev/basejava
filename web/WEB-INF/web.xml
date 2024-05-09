@@ -9,6 +9,7 @@
 <!--        <servlet-name>resumeServlet</servlet-name>-->
 <!--        <servlet-class>ru.javawebinar.basejava.web.ResumeServlet</servlet-class>-->
 <!--    </servlet>-->
+
 <!--    <servlet-mapping>-->
 <!--        <servlet-name>resumeServlet</servlet-name>-->
 <!--        <url-pattern>/resume</url-pattern>-->
