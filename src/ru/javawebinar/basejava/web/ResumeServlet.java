@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-@WebServlet(name ="resumeServlet", urlPatterns = "/resume")
+@WebServlet(name = "resumeServlet", urlPatterns = "/resume")
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
 
@@ -35,7 +35,7 @@ public class ResumeServlet extends HttpServlet {
         Resume r;
         switch (action) {
             case "add":
-                r = new Resume("newResume",null);
+                r = new Resume("newResume", null);
                 request.setAttribute("resume", r);
                 break;
             case "delete":

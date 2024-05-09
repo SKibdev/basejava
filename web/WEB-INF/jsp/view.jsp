@@ -17,47 +17,47 @@
                          type="java.util.Map.Entry<ru.javawebinar.basejava.model.ContactType, java.lang.String>"/>
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
-            <hr>
-        <c:forEach var="sectionEntry" items="${resume.sections}">
-            <%-- Извлекаем ключ (тип секции) и значение (содержимое секции) из записи в карте --%>
-            <c:set var="sectionType" value="${sectionEntry.key}"/>
-            <c:set var="sectionContent" value="${sectionEntry.value}"/>
+    <hr>
+    <c:forEach var="sectionEntry" items="${resume.sections}">
+        <%-- Извлекаем ключ (тип секции) и значение (содержимое секции) из записи в карте --%>
+        <c:set var="sectionType" value="${sectionEntry.key}"/>
+        <c:set var="sectionContent" value="${sectionEntry.value}"/>
 
-            <%-- Проверяем тип секции и отображаем соответствующим образом --%>
+        <%-- Проверяем тип секции и отображаем соответствующим образом --%>
         <c:choose>
             <%-- Секция с текстом --%>
-        <c:when test="${sectionEntry.value.getClass().getSimpleName() == 'TextSection'}">
-            <%-- Приводим содержимое секции к типу TextSection --%>
-            <c:set var="textSection" value="${sectionContent}"/>
-            <%-- Отображаем текстовое содержимое секции --%>
-    <div>
-        <h2>${sectionType.title}</h2>
-        <p>${textSection.content}</p>
-    </div>
-    </c:when>
+            <c:when test="${sectionEntry.value.getClass().getSimpleName() == 'TextSection'}">
+                <%-- Приводим содержимое секции к типу TextSection --%>
+                <c:set var="textSection" value="${sectionContent}"/>
+                <%-- Отображаем текстовое содержимое секции --%>
+                <div>
+                    <h2>${sectionType.title}</h2>
+                    <p>${textSection.content}</p>
+                </div>
+            </c:when>
 
-        <%-- Секция со списком --%>
-    <c:when test="${sectionEntry.value.getClass().getSimpleName() == 'ListSection'}">
-        <%-- Приводим содержимое секции к типу ListSection --%>
-        <c:set var="listSection" value="${sectionContent}"/>
-        <%-- Отображаем элементы списка секции --%>
-        <div>
-            <h2>${sectionType.title}</h2>
-            <ul>
-                <c:forEach var="item" items="${listSection.items}">
-                    <li>${item}</li>
-                </c:forEach>
-            </ul>
-        </div>
-    </c:when>
-        <%-- Случай по умолчанию, если тип секции не распознан --%>
-    <c:otherwise>
-        <div>
-<%--            <h2>${sectionType}</h2>--%>
-<%--            <p>Неподдерживаемый тип секции</p>--%>
-        </div>
-    </c:otherwise>
-    </c:choose>
+            <%-- Секция со списком --%>
+            <c:when test="${sectionEntry.value.getClass().getSimpleName() == 'ListSection'}">
+                <%-- Приводим содержимое секции к типу ListSection --%>
+                <c:set var="listSection" value="${sectionContent}"/>
+                <%-- Отображаем элементы списка секции --%>
+                <div>
+                    <h2>${sectionType.title}</h2>
+                    <ul>
+                        <c:forEach var="item" items="${listSection.items}">
+                            <li>${item}</li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:when>
+            <%-- Случай по умолчанию, если тип секции не распознан --%>
+            <c:otherwise>
+                <div>
+                        <%--            <h2>${sectionType}</h2>--%>
+                        <%--            <p>Неподдерживаемый тип секции</p>--%>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </c:forEach>
     <p>
 </section>

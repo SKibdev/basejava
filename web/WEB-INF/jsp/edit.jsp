@@ -31,7 +31,8 @@
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"
                        pattern="[^\s]+( [^\s]+)*"
-                       title="Не допускается ввод начальных, конечных и повторяющихся пробелов"></dd>></dd>
+                       title="Не допускается ввод начальных, конечных и повторяющихся пробелов"></dd>
+            ></dd>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">
@@ -54,7 +55,7 @@
                     </dl>
                 </c:when>
                 <c:when test="${type eq 'EXPERIENCE' || type eq 'EDUCATION'}">
-<%--                        TO DO доделать вывод этих секций--%>
+                    <%--                        TO DO доделать вывод этих секций--%>
                 </c:when>
             </c:choose>
         </c:forEach>
