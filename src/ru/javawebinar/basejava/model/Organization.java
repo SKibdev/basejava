@@ -73,10 +73,8 @@ public class Organization implements Serializable {
     public static class Position implements Serializable {
         private static final long SERIAL_VERSION_UID = 1L;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
-//        @JsonAdapter(JsonLocalDateAdapter.class)
         private LocalDate startDate;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
-//        @JsonAdapter(JsonLocalDateAdapter.class)
         private LocalDate endDate;
         private String title;
         private String description;

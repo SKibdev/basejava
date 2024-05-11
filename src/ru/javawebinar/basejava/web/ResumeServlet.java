@@ -11,9 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.javawebinar.basejava.model.SectionType.EDUCATION;
+import static ru.javawebinar.basejava.model.SectionType.EXPERIENCE;
 
 @WebServlet(name = "resumeServlet", urlPatterns = "/resume")
 public class ResumeServlet extends HttpServlet {
@@ -46,6 +50,10 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 r = storage.get(uuid);
+                Organization emptyOrganization = new Organization("", "",
+                        new Organization.Position( 0,  Month.JANUARY,  0, Month.JANUARY, "", ""));
+                ((OrganizationSection) r.getSection(EXPERIENCE)).getOrganizations().add(emptyOrganization);
+                ((OrganizationSection) r.getSection(EDUCATION)).getOrganizations().add(emptyOrganization);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -84,6 +92,7 @@ public class ResumeServlet extends HttpServlet {
                 r.getContacts().remove(type);
             }
         }
+
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && !value.trim().isEmpty()) {
@@ -95,12 +104,24 @@ public class ResumeServlet extends HttpServlet {
                         items = items.stream().filter(s -> !s.trim().isEmpty()).collect(Collectors.toList());
                         section = new ListSection(items);
                     }
+                    case EXPERIENCE, EDUCATION -> {
+//                        organizations = new ArrayList<>();
+//                        organizations.add(new Organization("","", new Organization.Position()));
+//                        section = new OrganizationSection(organizations);
+                        //                        String homePageName = request.getParameter("homePageName_" + type);
+//                        String homePageUrl = request.getParameter("homePageUrl_" + type);
+                        section = new OrganizationSection();
+                    }
                     default -> throw new IllegalStateException("Unexpected value: " + type);
                 }
                 r.addSection(type, section);
             } else {
-                r.getSections().remove(type);
+//                r.getSections().remove(type);
             }
         }
     }
 }
+
+//                        String valueJson = JsonParser.write(value, Section.class) ;
+//
+//                        section = JsonParser.read(value, Section.class);
