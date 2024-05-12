@@ -52,7 +52,7 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             case "view":
-                r = storage.get(uuid);r = storage.get(uuid);
+                r = storage.get(uuid);
                 break;
             case "edit":
                 r = storage.get(uuid);
@@ -70,14 +70,20 @@ public class ResumeServlet extends HttpServlet {
 
     private void addEmptyOrganization(Resume r, SectionType type) {
 
-        Organization emptyOrganization = new Organization("","",
+        Organization emptyOrganization = new Organization("", "",
                 new Organization.Position());
         OrganizationSection section = (OrganizationSection) r.getSection(type);
+        List<Organization> organizations = new ArrayList<>();
+        organizations.add(emptyOrganization);
         if (section != null) {
-            section.getOrganizations().add(0, emptyOrganization);
-        } else {
-            r.addSection(type, new OrganizationSection(emptyOrganization));
+            for (Organization sectionOrganization : section.getOrganizations()) {
+                List<Organization.Position> emptyFirstPositions = new ArrayList<>();
+                emptyFirstPositions.add(new Organization.Position());
+                emptyFirstPositions.addAll(sectionOrganization.getPositions());
+                organizations.add(new Organization(sectionOrganization.getHomePage(), emptyFirstPositions));
+            }
         }
+        r.addSection(type, new OrganizationSection(organizations));
     }
 
     @Override
@@ -159,7 +165,3 @@ public class ResumeServlet extends HttpServlet {
         return value == null || value.trim().isEmpty();
     }
 }
-
-//                        String valueJson = JsonParser.write(value, Section.class) ;
-//
-//                        section = JsonParser.read(value, Section.class);
