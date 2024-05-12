@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.web;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +39,12 @@ public class ResumeServlet extends HttpServlet {
             return;
         }
         Resume r;
+
         switch (action) {
             case "add":
                 r = new Resume("newResume", null);
+                addEmptyOrganization(r, EXPERIENCE);
+                addEmptyOrganization(r, EDUCATION);
                 request.setAttribute("resume", r);
                 break;
             case "delete":
@@ -48,12 +52,12 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             case "view":
+                r = storage.get(uuid);r = storage.get(uuid);
+                break;
             case "edit":
                 r = storage.get(uuid);
-                Organization emptyOrganization = new Organization("", "",
-                        new Organization.Position( 0,  Month.JANUARY,  0, Month.JANUARY, "", ""));
-                ((OrganizationSection) r.getSection(EXPERIENCE)).getOrganizations().add(emptyOrganization);
-                ((OrganizationSection) r.getSection(EDUCATION)).getOrganizations().add(emptyOrganization);
+                addEmptyOrganization(r, EXPERIENCE);
+                addEmptyOrganization(r, EDUCATION);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -62,6 +66,18 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
+    }
+
+    private void addEmptyOrganization(Resume r, SectionType type) {
+
+        Organization emptyOrganization = new Organization("","",
+                new Organization.Position());
+        OrganizationSection section = (OrganizationSection) r.getSection(type);
+        if (section != null) {
+            section.getOrganizations().add(0, emptyOrganization);
+        } else {
+            r.addSection(type, new OrganizationSection(emptyOrganization));
+        }
     }
 
     @Override
@@ -95,7 +111,10 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-            if (value != null && !value.trim().isEmpty()) {
+            String[] values = request.getParameterValues(type.name());
+            if (valueIsEmpty(value) && values.length < 2) {
+                r.getSections().remove(type);
+            } else {
                 Section section;
                 switch (type) {
                     case PERSONAL, OBJECTIVE -> section = new TextSection(value);
@@ -105,20 +124,39 @@ public class ResumeServlet extends HttpServlet {
                         section = new ListSection(items);
                     }
                     case EXPERIENCE, EDUCATION -> {
-//                        organizations = new ArrayList<>();
-//                        organizations.add(new Organization("","", new Organization.Position()));
-//                        section = new OrganizationSection(organizations);
-                        //                        String homePageName = request.getParameter("homePageName_" + type);
-//                        String homePageUrl = request.getParameter("homePageUrl_" + type);
-                        section = new OrganizationSection();
+
+                        List<Organization> organizations = new ArrayList<>();
+                        String[] urls = request.getParameterValues(type.name() + "url");
+
+                        for (int i = 0; i < values.length; i++) {
+                            String name = values[i];
+                            if (!valueIsEmpty(name)) {
+                                List<Organization.Position> positions = new ArrayList<>();
+                                String index = type.name() + i;
+                                String[] startDates = request.getParameterValues(index + "startDate");
+                                String[] endDates = request.getParameterValues(index + "endDate");
+                                String[] titles = request.getParameterValues(index + "title");
+                                String[] descriptions = request.getParameterValues(index + "description");
+                                for (int j = 0; j < titles.length; j++) {
+                                    if (!valueIsEmpty(titles[j])) {
+                                        positions.add(new Organization.Position(DateUtil.parse(startDates[j]),
+                                                DateUtil.parse(endDates[j]), titles[j], descriptions[j]));
+                                    }
+                                }
+                                organizations.add(new Organization(new Link(name, urls[i]), positions));
+                            }
+                        }
+                        section = new OrganizationSection(organizations);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + type);
                 }
                 r.addSection(type, section);
-            } else {
-//                r.getSections().remove(type);
             }
         }
+    }
+
+    private boolean valueIsEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }
 

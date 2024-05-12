@@ -1,5 +1,6 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -44,40 +45,56 @@
                 </c:when>
                 <c:when test="${type eq 'EXPERIENCE' || type eq 'EDUCATION'}">
                     <%--                        TO DO доделать вывод этих секций--%>
-                    <h2>${type.title}</h2>
-                    <c:forEach var="organization" items="${(resume.getSection(type)).getOrganizations()}">
+                    <h3>${type.title} </h3>
+                    <c:forEach var="organization" items="${(resume.getSection(type)).getOrganizations()}"
+                               varStatus="counter">
+
                         <dl>
-                            <dt>Название</dt>
-                            <dd><input type="text" name="homePageName_${type}" size=40 value="${organization.homePage.name}"
-                                       pattern="[^\s]+( [^\s]+)*"
-                                       title="Не допускается ввод начальных, конечных и повторяющихся пробелов"></dd>
+                            <dt>Название учреждения</dt>
+                            <dd><input type="text" name='${type.name()}' size=40 value="${organization.homePage.name}"
+                                       placeholder="Название">
                         </dl>
                         <dl>
                             <dt>Ссылка</dt>
-                            <dd><input type="text" name="homePageUrl_${type}" size=40 value="${organization.homePage.url}"
-                                       pattern="[^\s]+( [^\s]+)*"
-                                       title="Не допускается ввод начальных, конечных и повторяющихся пробелов"></dd>
+                            <dd><input type="text" name="${type.name()}url" size=40
+                                       value="${organization.homePage.url}"
+                                       placeholder="Ссылка"></dd>
                         </dl>
+                        <br>
+                        <div style="margin-left: 30px">
+                            <c:forEach var="positions" items="${organization.positions}">
+                                <jsp:useBean id="positions" type="ru.javawebinar.basejava.model.Organization.Position"/>
+                                <dl>
+                                    <dt>Начальная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${type.name()}${counter.index}startDate" size=10
+                                               value="<%=DateUtil.format(positions.getStartDate())%>"
+                                               placeholder="MM/yyyy">
+                                    </dd>
 
+                                </dl>
+                                <dl>
+                                    <dt>Конечная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${type.name()}${counter.index}endDate" size=10
+                                               value="<%=DateUtil.format(positions.getEndDate())%>"
+                                               placeholder="MM/yyyy">
+                                </dl>
 
-                        <%--                            <h2><a href="${organization.getHomePage().url}">${organization.getHomePage().name}</a></h2>--%>
-                        <%--                            <p><strong>Период работы:</strong> ${organization.period}</p>--%>
-                        <%--                            <p><strong>Должность:</strong> ${organization.position}</p>--%>
-                        <%--                            <p><strong>Описание:</strong> ${organization.description}</p>--%>
+                                <dl>
+                                    <dt>Должность:</dt>
+                                    <dd><input type="text" name='${type.name()}${counter.index}title' size=60
+                                               value="${positions.title}">
+                                </dl>
+                                <dl>
+                                    <dt>Описание:</dt>
+                                    <dd><textarea name="${type.name()}${counter.index}description" rows=5
+                                                  cols=60>${positions.description}</textarea></dd>
+                                </dl>
+                            </c:forEach>
+                        </div>
                         <hr>
                     </c:forEach>
-
-                    <%--                    <dl>--%>
-                    <%--                        <dt>${Название}</dt>--%>
-                    <%--                        <dd><input type="text" name="${Название1}" size=40 value="${resume.getSection(type)}"--%>
-                    <%--                                   pattern="[^\s]+( [^\s]+)*"--%>
-                    <%--                                   title="Не допускается ввод начальных, конечных и повторяющихся пробелов"></dd>--%>
-
-
-                    <%--                        <dt>${type.title}</dt>--%>
-                    <%--                        <dd><textarea name="${type.name()}" cols="60" rows="2">${resume.getSection(type)}</textarea>--%>
-                    <%--                        </dd>--%>
-
                 </c:when>
             </c:choose>
         </c:forEach>
