@@ -1,3 +1,5 @@
+<%@ page import="ru.javawebinar.basejava.model.OrganizationSection" %>
+<%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -50,12 +52,39 @@
                     </ul>
                 </div>
             </c:when>
+            <%--            Секции оганизации--%>
+            <c:when test="${sectionEntry.value.getClass().getSimpleName() == 'OrganizationSection'}">
+                <%-- Приводим содержимое секции к типу OrganizationSection --%>
+                <c:set var="organizationSection" value="${sectionContent}"/>
+                <div>
+                    <h2>${sectionType.title}</h2>
+                        <%--                Проходим циклом по List<Organization>--%>
+                    <c:forEach var="organization" items="${organizationSection.organizations}">
+                        <%--Отображаем объект Link название организации и ссылка--%>
+                        <c:choose>
+                            <c:when test="${empty organization.homePage.url}">
+                                <h3>${org.homePage.name}</h3>
+                            </c:when>
+                            <c:otherwise>
+                                <h3><a href="${organization.homePage.url}">${organization.homePage.name}</a></h3>
+                            </c:otherwise>
+                        </c:choose>
+                        <%--                    Отображаем элементы списка positions--%>
+                        <c:forEach var="position" items="${organization.positions}">
+                            <jsp:useBean id="position" type="ru.javawebinar.basejava.model.Organization.Position"/>
+                            <tr>
+                                <td><%=DateUtil.format(position.getStartDate())%> -
+                                    <%=DateUtil.format(position.getEndDate())%>
+                                </td>
+                                <br>
+                                <td><b>${position.title}</b><br>${position.description}</td>
+                            </tr>
+                        </c:forEach>
+                    </c:forEach>
+                </div>
+            </c:when>
             <%-- Случай по умолчанию, если тип секции не распознан --%>
             <c:otherwise>
-                <div>
-                        <%--            <h2>${sectionType}</h2>--%>
-                        <%--            <p>Неподдерживаемый тип секции</p>--%>
-                </div>
             </c:otherwise>
         </c:choose>
     </c:forEach>
