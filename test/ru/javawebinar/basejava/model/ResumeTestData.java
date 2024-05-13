@@ -84,16 +84,16 @@ public class ResumeTestData {
     private final static List<Organization> EDUCATIONAL_INSTITUTIONS = List.of(EDUCATIONAL_INSTITUTION_1,
             EDUCATIONAL_INSTITUTION_2);
 
-    public static final String NAME_1 = "fullName1";
+    public static final String NAME_1 = "1 Все разделы";
     public static final Resume RESUME_UUID_1 = ResumeTestData.createResume(NAME_1, FULL);
 
-    public static final String NAME_2 = "fullName2";
+    public static final String NAME_2 = "2 Только секции";
     public static final Resume RESUME_UUID_2 = ResumeTestData.createResume(NAME_2, ONLY_SECTIONS);
 
-    public static final String NAME_3 = "fullName3";
+    public static final String NAME_3 = "3 Только контакты";
     public static final Resume RESUME_UUID_3 = ResumeTestData.createResume(NAME_3, ONLY_CONTACTS);
 
-    public static final String NAME_4 = "fullName4";
+    public static final String NAME_4 = "4 Все разделы";
     public static final Resume RESUME_UUID_4 = ResumeTestData.createResume(NAME_4, FULL);
 
 

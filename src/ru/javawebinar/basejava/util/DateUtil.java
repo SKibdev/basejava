@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class DateUtil {
     public static final LocalDate NOW = LocalDate.of(3000, 1, 1);
@@ -18,7 +19,7 @@ public class DateUtil {
         if (date == null) {
             result = "";
         } else if (date.equals(NOW)) {
-            result =  "Сейчас";
+            result = "Сейчас";
         } else {
             result = date.format(DATE_FORMATTER);
         }
@@ -30,8 +31,12 @@ public class DateUtil {
         if (date == null || date.trim().isEmpty() || "Сейчас".equals(date)) {
             result = NOW;
         } else {
-            YearMonth yearMonth = YearMonth.parse(date, DATE_FORMATTER);
-            result = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), 1);
+            try {
+                YearMonth yearMonth = YearMonth.parse(date, DATE_FORMATTER);
+                result = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), 1);
+            } catch (DateTimeParseException e) {
+                result = NOW;
+            }
         }
         return result;
     }

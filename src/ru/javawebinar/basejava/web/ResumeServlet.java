@@ -87,7 +87,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         Resume r;
@@ -130,10 +130,8 @@ public class ResumeServlet extends HttpServlet {
                         section = new ListSection(items);
                     }
                     case EXPERIENCE, EDUCATION -> {
-
                         List<Organization> organizations = new ArrayList<>();
                         String[] urls = request.getParameterValues(type.name() + "url");
-
                         for (int i = 0; i < values.length; i++) {
                             String name = values[i];
                             if (!valueIsEmpty(name)) {

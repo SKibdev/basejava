@@ -71,7 +71,6 @@
                                                value="<%=DateUtil.format(positions.getStartDate())%>"
                                                placeholder="MM/yyyy">
                                     </dd>
-
                                 </dl>
                                 <dl>
                                     <dt>Конечная дата:</dt>
@@ -82,7 +81,7 @@
                                 </dl>
 
                                 <dl>
-                                    <dt>Должность:</dt>
+                                    <dt>Позиция:</dt>
                                     <dd><input type="text" name='${type.name()}${counter.index}title' size=60
                                                value="${positions.title}">
                                 </dl>
