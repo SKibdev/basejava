@@ -38,6 +38,6 @@ public class DateUtil {
                 result = NOW;
             }
         }
-        return result;
+        return result.isAfter(LocalDate.now()) ? NOW : result;
     }
 }
